@@ -1,0 +1,257 @@
+{
+  "symbol": "BTC",
+  "horizon": 1,
+  "target": "next_1_day_return",
+  "target_type": "return",
+  "model_type": "ExtraTreesRegressor",
+  "model_version": "v3-direct",
+  "last_trained": "2026-08-24T17:42:23.861632+00:00",
+  "training_samples": 2166,
+  "validation_samples": 464,
+  "test_samples": 465,
+  "dataset_rows": 3095,
+  "feature_columns": [
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "price_change",
+    "high_low_range",
+    "open_close_range",
+    "body_size",
+    "upper_wick",
+    "lower_wick",
+    "close_lag_1",
+    "close_lag_2",
+    "close_lag_3",
+    "close_lag_5",
+    "close_lag_7",
+    "close_lag_14",
+    "close_lag_21",
+    "close_lag_30",
+    "return_lag_1",
+    "return_lag_2",
+    "return_lag_3",
+    "return_lag_5",
+    "return_lag_7",
+    "return_lag_14",
+    "return_lag_30",
+    "SMA_7",
+    "SMA_14",
+    "SMA_21",
+    "SMA_30",
+    "SMA_50",
+    "SMA_100",
+    "SMA_200",
+    "EMA_7",
+    "EMA_14",
+    "EMA_21",
+    "EMA_30",
+    "EMA_50",
+    "EMA_100",
+    "close_to_SMA_7",
+    "close_to_SMA_30",
+    "close_to_SMA_50",
+    "close_to_SMA_200",
+    "RSI",
+    "MACD",
+    "MACD_signal",
+    "MACD_histogram",
+    "ROC",
+    "Momentum",
+    "ATR",
+    "rolling_std_7",
+    "rolling_std_14",
+    "rolling_std_30",
+    "rolling_volatility",
+    "Bollinger_upper",
+    "Bollinger_lower",
+    "Bollinger_width",
+    "ADX",
+    "CCI",
+    "Stochastic",
+    "Williams_R",
+    "OBV",
+    "day_of_week",
+    "day_of_month",
+    "week_of_year",
+    "month",
+    "quarter"
+  ],
+  "feature_scaler": null,
+  "target_scaler": null,
+  "training_start": "2018-03-04T00:00:00+00:00",
+  "training_end": "2024-02-06T00:00:00+00:00",
+  "validation_start": "2024-02-07T00:00:00+00:00",
+  "validation_end": "2025-05-15T00:00:00+00:00",
+  "test_start": "2025-05-16T00:00:00+00:00",
+  "test_end": "2026-08-23T00:00:00+00:00",
+  "best_params": {
+    "n_estimators": 200,
+    "min_samples_split": 2,
+    "min_samples_leaf": 2,
+    "max_features": "sqrt",
+    "max_depth": 8
+  },
+  "metrics": {
+    "mae": 1362.81954,
+    "rmse": 1882.026144,
+    "r2": 0.991151,
+    "mape": 1.564702,
+    "smape": 1.561188,
+    "directional_accuracy": 47.956989,
+    "prediction_error_pct": 0.052645
+  },
+  "baseline_metrics": {
+    "mae": 1340.026796,
+    "rmse": 1863.725729,
+    "r2": 0.991323,
+    "mape": 1.541453,
+    "smape": 1.538954,
+    "directional_accuracy": 0.0,
+    "prediction_error_pct": 0.082418
+  },
+  "validation_metrics": {
+    "mae": 1749.567371,
+    "rmse": 2323.113051,
+    "r2": 0.979127,
+    "mape": 2.29816,
+    "smape": 2.328596,
+    "directional_accuracy": 49.353448,
+    "prediction_error_pct": -1.375966
+  },
+  "validation_comparison": [
+    {
+      "model_type": "RandomForestRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 14486.068741,
+        "rmse": 20371.637113,
+        "r2": -0.605114,
+        "mape": 16.194643,
+        "smape": 18.961991,
+        "directional_accuracy": 49.137931,
+        "prediction_error_pct": -15.889978
+      }
+    },
+    {
+      "model_type": "ExtraTreesRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 16152.332824,
+        "rmse": 21820.835767,
+        "r2": -0.841606,
+        "mape": 18.36502,
+        "smape": 21.632634,
+        "directional_accuracy": 48.491379,
+        "prediction_error_pct": -18.301859
+      }
+    },
+    {
+      "model_type": "GradientBoostingRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 16518.061054,
+        "rmse": 22384.897279,
+        "r2": -0.938047,
+        "mape": 18.732114,
+        "smape": 22.185342,
+        "directional_accuracy": 49.137931,
+        "prediction_error_pct": -18.600437
+      }
+    },
+    {
+      "model_type": "HistGradientBoostingRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 14524.517412,
+        "rmse": 20437.033961,
+        "r2": -0.615436,
+        "mape": 16.23111,
+        "smape": 19.014543,
+        "directional_accuracy": 49.137931,
+        "prediction_error_pct": -15.874194
+      }
+    },
+    {
+      "model_type": "XGBoost",
+      "target_type": "price",
+      "metrics": {
+        "mae": 15469.791825,
+        "rmse": 21311.694171,
+        "r2": -0.756669,
+        "mape": 17.437864,
+        "smape": 20.511842,
+        "directional_accuracy": 49.784483,
+        "prediction_error_pct": -17.311806
+      }
+    },
+    {
+      "model_type": "RandomForestRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 1855.992346,
+        "rmse": 2436.52569,
+        "r2": 0.977039,
+        "mape": 2.428029,
+        "smape": 2.463761,
+        "directional_accuracy": 49.137931,
+        "prediction_error_pct": -1.592258
+      }
+    },
+    {
+      "model_type": "ExtraTreesRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 1749.567371,
+        "rmse": 2323.113051,
+        "r2": 0.979127,
+        "mape": 2.29816,
+        "smape": 2.328596,
+        "directional_accuracy": 49.353448,
+        "prediction_error_pct": -1.375966
+      }
+    },
+    {
+      "model_type": "GradientBoostingRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 3895.330179,
+        "rmse": 4593.553864,
+        "r2": 0.918388,
+        "mape": 4.941226,
+        "smape": 5.100913,
+        "directional_accuracy": 50.215517,
+        "prediction_error_pct": -4.759782
+      }
+    },
+    {
+      "model_type": "HistGradientBoostingRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 2138.237685,
+        "rmse": 2749.54238,
+        "r2": 0.97076,
+        "mape": 2.791025,
+        "smape": 2.838889,
+        "directional_accuracy": 52.155172,
+        "prediction_error_pct": -2.011355
+      }
+    },
+    {
+      "model_type": "XGBoost",
+      "target_type": "return",
+      "metrics": {
+        "mae": 2005.793014,
+        "rmse": 2617.352776,
+        "r2": 0.973504,
+        "mape": 2.604276,
+        "smape": 2.647041,
+        "directional_accuracy": 49.137931,
+        "prediction_error_pct": -1.823178
+      }
+    }
+  ],
+  "model_path": "D:\\Major Project\\Cryptohub\\models\\BTC\\1d\\model.joblib"
+}

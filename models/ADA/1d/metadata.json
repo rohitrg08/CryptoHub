@@ -1,0 +1,257 @@
+{
+  "symbol": "ADA",
+  "horizon": 1,
+  "target": "next_1_day_return",
+  "target_type": "return",
+  "model_type": "ExtraTreesRegressor",
+  "model_version": "v3-direct",
+  "last_trained": "2026-08-24T18:15:53.012374+00:00",
+  "training_samples": 1996,
+  "validation_samples": 428,
+  "test_samples": 428,
+  "dataset_rows": 2852,
+  "feature_columns": [
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "price_change",
+    "high_low_range",
+    "open_close_range",
+    "body_size",
+    "upper_wick",
+    "lower_wick",
+    "close_lag_1",
+    "close_lag_2",
+    "close_lag_3",
+    "close_lag_5",
+    "close_lag_7",
+    "close_lag_14",
+    "close_lag_21",
+    "close_lag_30",
+    "return_lag_1",
+    "return_lag_2",
+    "return_lag_3",
+    "return_lag_5",
+    "return_lag_7",
+    "return_lag_14",
+    "return_lag_30",
+    "SMA_7",
+    "SMA_14",
+    "SMA_21",
+    "SMA_30",
+    "SMA_50",
+    "SMA_100",
+    "SMA_200",
+    "EMA_7",
+    "EMA_14",
+    "EMA_21",
+    "EMA_30",
+    "EMA_50",
+    "EMA_100",
+    "close_to_SMA_7",
+    "close_to_SMA_30",
+    "close_to_SMA_50",
+    "close_to_SMA_200",
+    "RSI",
+    "MACD",
+    "MACD_signal",
+    "MACD_histogram",
+    "ROC",
+    "Momentum",
+    "ATR",
+    "rolling_std_7",
+    "rolling_std_14",
+    "rolling_std_30",
+    "rolling_volatility",
+    "Bollinger_upper",
+    "Bollinger_lower",
+    "Bollinger_width",
+    "ADX",
+    "CCI",
+    "Stochastic",
+    "Williams_R",
+    "OBV",
+    "day_of_week",
+    "day_of_month",
+    "week_of_year",
+    "month",
+    "quarter"
+  ],
+  "feature_scaler": null,
+  "target_scaler": null,
+  "training_start": "2018-11-02T00:00:00+00:00",
+  "training_end": "2024-04-19T00:00:00+00:00",
+  "validation_start": "2024-04-20T00:00:00+00:00",
+  "validation_end": "2025-06-21T00:00:00+00:00",
+  "test_start": "2025-06-22T00:00:00+00:00",
+  "test_end": "2026-08-23T00:00:00+00:00",
+  "best_params": {
+    "n_estimators": 200,
+    "min_samples_split": 2,
+    "min_samples_leaf": 2,
+    "max_features": "sqrt",
+    "max_depth": 8
+  },
+  "metrics": {
+    "mae": 0.013479,
+    "rmse": 0.021003,
+    "r2": 0.992766,
+    "mape": 3.062423,
+    "smape": 3.04874,
+    "directional_accuracy": 46.028037,
+    "prediction_error_pct": 0.452169
+  },
+  "baseline_metrics": {
+    "mae": 0.013356,
+    "rmse": 0.020999,
+    "r2": 0.992769,
+    "mape": 3.010524,
+    "smape": 3.00206,
+    "directional_accuracy": 0.46729,
+    "prediction_error_pct": 0.295754
+  },
+  "validation_metrics": {
+    "mae": 0.021779,
+    "rmse": 0.04153,
+    "r2": 0.970256,
+    "mape": 3.28508,
+    "smape": 3.297404,
+    "directional_accuracy": 50.46729,
+    "prediction_error_pct": 0.20343
+  },
+  "validation_comparison": [
+    {
+      "model_type": "RandomForestRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 0.03159,
+        "rmse": 0.050521,
+        "r2": 0.955982,
+        "mape": 4.743685,
+        "smape": 4.776031,
+        "directional_accuracy": 51.401869,
+        "prediction_error_pct": -0.224125
+      }
+    },
+    {
+      "model_type": "ExtraTreesRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 0.026318,
+        "rmse": 0.045711,
+        "r2": 0.963966,
+        "mape": 3.932929,
+        "smape": 3.971313,
+        "directional_accuracy": 51.401869,
+        "prediction_error_pct": -0.264266
+      }
+    },
+    {
+      "model_type": "GradientBoostingRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 0.038532,
+        "rmse": 0.071492,
+        "r2": 0.911855,
+        "mape": 5.133983,
+        "smape": 5.007227,
+        "directional_accuracy": 47.897196,
+        "prediction_error_pct": 1.709873
+      }
+    },
+    {
+      "model_type": "HistGradientBoostingRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 0.042085,
+        "rmse": 0.070467,
+        "r2": 0.914365,
+        "mape": 5.650291,
+        "smape": 5.552806,
+        "directional_accuracy": 46.962617,
+        "prediction_error_pct": 1.473612
+      }
+    },
+    {
+      "model_type": "XGBoost",
+      "target_type": "price",
+      "metrics": {
+        "mae": 0.028174,
+        "rmse": 0.049264,
+        "r2": 0.958145,
+        "mape": 4.07973,
+        "smape": 4.065419,
+        "directional_accuracy": 48.598131,
+        "prediction_error_pct": 0.614116
+      }
+    },
+    {
+      "model_type": "RandomForestRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 0.021838,
+        "rmse": 0.041865,
+        "r2": 0.969774,
+        "mape": 3.296578,
+        "smape": 3.311208,
+        "directional_accuracy": 52.570093,
+        "prediction_error_pct": 0.071218
+      }
+    },
+    {
+      "model_type": "ExtraTreesRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 0.021779,
+        "rmse": 0.04153,
+        "r2": 0.970256,
+        "mape": 3.28508,
+        "smape": 3.297404,
+        "directional_accuracy": 50.46729,
+        "prediction_error_pct": 0.20343
+      }
+    },
+    {
+      "model_type": "GradientBoostingRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 0.022049,
+        "rmse": 0.041243,
+        "r2": 0.970665,
+        "mape": 3.315906,
+        "smape": 3.340131,
+        "directional_accuracy": 53.271028,
+        "prediction_error_pct": -0.002435
+      }
+    },
+    {
+      "model_type": "HistGradientBoostingRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 0.022354,
+        "rmse": 0.042408,
+        "r2": 0.968984,
+        "mape": 3.341565,
+        "smape": 3.367104,
+        "directional_accuracy": 54.906542,
+        "prediction_error_pct": -0.320299
+      }
+    },
+    {
+      "model_type": "XGBoost",
+      "target_type": "return",
+      "metrics": {
+        "mae": 0.022247,
+        "rmse": 0.041789,
+        "r2": 0.969883,
+        "mape": 3.351126,
+        "smape": 3.378468,
+        "directional_accuracy": 52.570093,
+        "prediction_error_pct": -0.247256
+      }
+    }
+  ],
+  "model_path": "D:\\Major Project\\Cryptohub\\models\\ADA\\1d\\model.joblib"
+}

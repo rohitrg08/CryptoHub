@@ -1,0 +1,273 @@
+{
+  "symbol": "ADA",
+  "horizon": 3,
+  "target": "next_3_day_return",
+  "target_type": "return",
+  "model_type": "GradientBoostingRegressor",
+  "model_version": "v3-direct",
+  "last_trained": "2026-08-24T18:16:50.142529+00:00",
+  "training_samples": 1994,
+  "validation_samples": 428,
+  "test_samples": 428,
+  "dataset_rows": 2850,
+  "feature_columns": [
+    "open",
+    "high",
+    "low",
+    "close",
+    "volume",
+    "price_change",
+    "high_low_range",
+    "open_close_range",
+    "body_size",
+    "upper_wick",
+    "lower_wick",
+    "close_lag_1",
+    "close_lag_2",
+    "close_lag_3",
+    "close_lag_5",
+    "close_lag_7",
+    "close_lag_14",
+    "close_lag_21",
+    "close_lag_30",
+    "return_lag_1",
+    "return_lag_2",
+    "return_lag_3",
+    "return_lag_5",
+    "return_lag_7",
+    "return_lag_14",
+    "return_lag_30",
+    "SMA_7",
+    "SMA_14",
+    "SMA_21",
+    "SMA_30",
+    "SMA_50",
+    "SMA_100",
+    "SMA_200",
+    "EMA_7",
+    "EMA_14",
+    "EMA_21",
+    "EMA_30",
+    "EMA_50",
+    "EMA_100",
+    "close_to_SMA_7",
+    "close_to_SMA_30",
+    "close_to_SMA_50",
+    "close_to_SMA_200",
+    "RSI",
+    "MACD",
+    "MACD_signal",
+    "MACD_histogram",
+    "ROC",
+    "Momentum",
+    "ATR",
+    "rolling_std_7",
+    "rolling_std_14",
+    "rolling_std_30",
+    "rolling_volatility",
+    "Bollinger_upper",
+    "Bollinger_lower",
+    "Bollinger_width",
+    "ADX",
+    "CCI",
+    "Stochastic",
+    "Williams_R",
+    "OBV",
+    "day_of_week",
+    "day_of_month",
+    "week_of_year",
+    "month",
+    "quarter"
+  ],
+  "feature_scaler": null,
+  "target_scaler": null,
+  "training_start": "2018-11-02T00:00:00+00:00",
+  "training_end": "2024-04-17T00:00:00+00:00",
+  "validation_start": "2024-04-18T00:00:00+00:00",
+  "validation_end": "2025-06-19T00:00:00+00:00",
+  "test_start": "2025-06-20T00:00:00+00:00",
+  "test_end": "2026-08-21T00:00:00+00:00",
+  "best_params": {
+    "alpha": 0.9,
+    "ccp_alpha": 0.0,
+    "criterion": "deprecated",
+    "init": null,
+    "learning_rate": 0.03,
+    "loss": "huber",
+    "max_depth": 3,
+    "max_features": null,
+    "max_leaf_nodes": null,
+    "min_impurity_decrease": 0.0,
+    "min_samples_leaf": 1,
+    "min_samples_split": 2,
+    "min_weight_fraction_leaf": 0.0,
+    "n_estimators": 250,
+    "n_iter_no_change": null,
+    "random_state": 42,
+    "subsample": 1.0,
+    "tol": 0.0001,
+    "validation_fraction": 0.1,
+    "verbose": 0,
+    "warm_start": false
+  },
+  "metrics": {
+    "mae": 0.02463,
+    "rmse": 0.035747,
+    "r2": 0.979046,
+    "mape": 5.575715,
+    "smape": 5.55394,
+    "directional_accuracy": 52.336449,
+    "prediction_error_pct": 0.355095
+  },
+  "baseline_metrics": {
+    "mae": 0.024863,
+    "rmse": 0.036297,
+    "r2": 0.978397,
+    "mape": 5.648211,
+    "smape": 5.591588,
+    "directional_accuracy": 0.46729,
+    "prediction_error_pct": 0.913275
+  },
+  "validation_metrics": {
+    "mae": 0.040056,
+    "rmse": 0.065299,
+    "r2": 0.926464,
+    "mape": 6.056123,
+    "smape": 6.120331,
+    "directional_accuracy": 54.205607,
+    "prediction_error_pct": 0.338063
+  },
+  "validation_comparison": [
+    {
+      "model_type": "RandomForestRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 0.055713,
+        "rmse": 0.08739,
+        "r2": 0.868295,
+        "mape": 7.990182,
+        "smape": 7.980698,
+        "directional_accuracy": 50.0,
+        "prediction_error_pct": 0.454491
+      }
+    },
+    {
+      "model_type": "ExtraTreesRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 0.048223,
+        "rmse": 0.075405,
+        "r2": 0.901942,
+        "mape": 7.140255,
+        "smape": 7.214851,
+        "directional_accuracy": 53.271028,
+        "prediction_error_pct": 0.118367
+      }
+    },
+    {
+      "model_type": "GradientBoostingRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 0.046135,
+        "rmse": 0.07509,
+        "r2": 0.902759,
+        "mape": 6.757479,
+        "smape": 6.783064,
+        "directional_accuracy": 49.53271,
+        "prediction_error_pct": 0.446545
+      }
+    },
+    {
+      "model_type": "HistGradientBoostingRegressor",
+      "target_type": "price",
+      "metrics": {
+        "mae": 0.066156,
+        "rmse": 0.104964,
+        "r2": 0.809994,
+        "mape": 9.212116,
+        "smape": 9.315911,
+        "directional_accuracy": 49.766355,
+        "prediction_error_pct": -0.674809
+      }
+    },
+    {
+      "model_type": "XGBoost",
+      "target_type": "price",
+      "metrics": {
+        "mae": 0.053749,
+        "rmse": 0.085225,
+        "r2": 0.874737,
+        "mape": 7.777101,
+        "smape": 7.875507,
+        "directional_accuracy": 49.766355,
+        "prediction_error_pct": -0.402886
+      }
+    },
+    {
+      "model_type": "RandomForestRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 0.040684,
+        "rmse": 0.066183,
+        "r2": 0.92446,
+        "mape": 6.104029,
+        "smape": 6.20052,
+        "directional_accuracy": 54.439252,
+        "prediction_error_pct": -0.311401
+      }
+    },
+    {
+      "model_type": "ExtraTreesRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 0.041629,
+        "rmse": 0.067446,
+        "r2": 0.921549,
+        "mape": 6.235208,
+        "smape": 6.332856,
+        "directional_accuracy": 50.46729,
+        "prediction_error_pct": -0.262933
+      }
+    },
+    {
+      "model_type": "GradientBoostingRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 0.040056,
+        "rmse": 0.065299,
+        "r2": 0.926464,
+        "mape": 6.056123,
+        "smape": 6.120331,
+        "directional_accuracy": 54.205607,
+        "prediction_error_pct": 0.338063
+      }
+    },
+    {
+      "model_type": "HistGradientBoostingRegressor",
+      "target_type": "return",
+      "metrics": {
+        "mae": 0.042255,
+        "rmse": 0.067583,
+        "r2": 0.921231,
+        "mape": 6.258267,
+        "smape": 6.427594,
+        "directional_accuracy": 55.373832,
+        "prediction_error_pct": -1.240631
+      }
+    },
+    {
+      "model_type": "XGBoost",
+      "target_type": "return",
+      "metrics": {
+        "mae": 0.041445,
+        "rmse": 0.065966,
+        "r2": 0.924955,
+        "mape": 6.19782,
+        "smape": 6.319538,
+        "directional_accuracy": 51.869159,
+        "prediction_error_pct": -0.659365
+      }
+    }
+  ],
+  "model_path": "D:\\Major Project\\Cryptohub\\models\\ADA\\3d\\model.joblib"
+}
