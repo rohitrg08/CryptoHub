@@ -1,12 +1,12 @@
 {
   "symbol": "DOGE",
-  "model_type": "RandomForestRegressor",
-  "model_version": "rf-v2",
-  "last_trained": "2026-08-14T14:36:31.638019+00:00",
-  "training_samples": 459,
-  "validation_samples": 81,
-  "test_samples": 81,
-  "dataset_rows": 540,
+  "model_type": "Ensemble (RF + XGBoost)",
+  "model_version": "ens-v1",
+  "last_trained": "2026-10-08T15:45:45.039612+00:00",
+  "training_samples": 849,
+  "validation_samples": 150,
+  "test_samples": 150,
+  "dataset_rows": 999,
   "feature_columns": [
     "open",
     "high",
@@ -37,22 +37,769 @@
     "day_of_week",
     "month"
   ],
-  "best_params": {
-    "random_state": 42,
-    "n_jobs": -1,
-    "n_estimators": 600,
-    "max_depth": null,
-    "min_samples_split": 2,
-    "min_samples_leaf": 1
-  },
+  "weights": [
+    0.55,
+    0.45
+  ],
   "metrics": {
-    "mae": 0.00331,
-    "rmse": 0.005128,
-    "r2": -1.127204,
-    "mape": 1.505137,
-    "directional_accuracy": 7.407407,
-    "prediction_error_pct": -1.505137
+    "mae": 0.002863,
+    "rmse": 0.003576,
+    "r2": 0.908101,
+    "mape": 3.504905,
+    "directional_accuracy": 46.0,
+    "prediction_error_pct": 2.728261
   },
-  "validation_rmse": 0.012801,
-  "model_path": "D:\\Cryptohub\\models\\DOGE_random_forest.joblib"
+  "validation_rmse": 0.004116,
+  "backtest": [
+    {
+      "timestamp": "2026-05-12T00:00:00+00:00",
+      "actual": 0.11015,
+      "predicted": 0.111804
+    },
+    {
+      "timestamp": "2026-05-13T00:00:00+00:00",
+      "actual": 0.11269,
+      "predicted": 0.110949
+    },
+    {
+      "timestamp": "2026-05-14T00:00:00+00:00",
+      "actual": 0.11546,
+      "predicted": 0.114291
+    },
+    {
+      "timestamp": "2026-05-15T00:00:00+00:00",
+      "actual": 0.11336,
+      "predicted": 0.118128
+    },
+    {
+      "timestamp": "2026-05-16T00:00:00+00:00",
+      "actual": 0.10937,
+      "predicted": 0.113398
+    },
+    {
+      "timestamp": "2026-05-17T00:00:00+00:00",
+      "actual": 0.10899,
+      "predicted": 0.109006
+    },
+    {
+      "timestamp": "2026-05-18T00:00:00+00:00",
+      "actual": 0.10477,
+      "predicted": 0.109362
+    },
+    {
+      "timestamp": "2026-05-19T00:00:00+00:00",
+      "actual": 0.103,
+      "predicted": 0.103901
+    },
+    {
+      "timestamp": "2026-05-20T00:00:00+00:00",
+      "actual": 0.10371,
+      "predicted": 0.102646
+    },
+    {
+      "timestamp": "2026-05-21T00:00:00+00:00",
+      "actual": 0.10568,
+      "predicted": 0.104362
+    },
+    {
+      "timestamp": "2026-05-22T00:00:00+00:00",
+      "actual": 0.10234,
+      "predicted": 0.106265
+    },
+    {
+      "timestamp": "2026-05-23T00:00:00+00:00",
+      "actual": 0.10307,
+      "predicted": 0.10192
+    },
+    {
+      "timestamp": "2026-05-24T00:00:00+00:00",
+      "actual": 0.10227,
+      "predicted": 0.103535
+    },
+    {
+      "timestamp": "2026-05-25T00:00:00+00:00",
+      "actual": 0.10214,
+      "predicted": 0.101755
+    },
+    {
+      "timestamp": "2026-05-26T00:00:00+00:00",
+      "actual": 0.10105,
+      "predicted": 0.101776
+    },
+    {
+      "timestamp": "2026-05-27T00:00:00+00:00",
+      "actual": 0.10049,
+      "predicted": 0.102011
+    },
+    {
+      "timestamp": "2026-05-28T00:00:00+00:00",
+      "actual": 0.09957,
+      "predicted": 0.101301
+    },
+    {
+      "timestamp": "2026-05-29T00:00:00+00:00",
+      "actual": 0.0997,
+      "predicted": 0.100744
+    },
+    {
+      "timestamp": "2026-05-30T00:00:00+00:00",
+      "actual": 0.10061,
+      "predicted": 0.100452
+    },
+    {
+      "timestamp": "2026-05-31T00:00:00+00:00",
+      "actual": 0.10041,
+      "predicted": 0.101084
+    },
+    {
+      "timestamp": "2026-06-01T00:00:00+00:00",
+      "actual": 0.1011,
+      "predicted": 0.100351
+    },
+    {
+      "timestamp": "2026-06-02T00:00:00+00:00",
+      "actual": 0.09275,
+      "predicted": 0.101659
+    },
+    {
+      "timestamp": "2026-06-03T00:00:00+00:00",
+      "actual": 0.09139,
+      "predicted": 0.094291
+    },
+    {
+      "timestamp": "2026-06-04T00:00:00+00:00",
+      "actual": 0.08858,
+      "predicted": 0.09403
+    },
+    {
+      "timestamp": "2026-06-05T00:00:00+00:00",
+      "actual": 0.08148,
+      "predicted": 0.092424
+    },
+    {
+      "timestamp": "2026-06-06T00:00:00+00:00",
+      "actual": 0.08192,
+      "predicted": 0.084808
+    },
+    {
+      "timestamp": "2026-06-07T00:00:00+00:00",
+      "actual": 0.08628,
+      "predicted": 0.085912
+    },
+    {
+      "timestamp": "2026-06-08T00:00:00+00:00",
+      "actual": 0.08634,
+      "predicted": 0.088878
+    },
+    {
+      "timestamp": "2026-06-09T00:00:00+00:00",
+      "actual": 0.08479,
+      "predicted": 0.088157
+    },
+    {
+      "timestamp": "2026-06-10T00:00:00+00:00",
+      "actual": 0.08294,
+      "predicted": 0.087787
+    },
+    {
+      "timestamp": "2026-06-11T00:00:00+00:00",
+      "actual": 0.08608,
+      "predicted": 0.085198
+    },
+    {
+      "timestamp": "2026-06-12T00:00:00+00:00",
+      "actual": 0.08598,
+      "predicted": 0.088343
+    },
+    {
+      "timestamp": "2026-06-13T00:00:00+00:00",
+      "actual": 0.08788,
+      "predicted": 0.088754
+    },
+    {
+      "timestamp": "2026-06-14T00:00:00+00:00",
+      "actual": 0.08889,
+      "predicted": 0.089021
+    },
+    {
+      "timestamp": "2026-06-15T00:00:00+00:00",
+      "actual": 0.08814,
+      "predicted": 0.08982
+    },
+    {
+      "timestamp": "2026-06-16T00:00:00+00:00",
+      "actual": 0.08717,
+      "predicted": 0.088846
+    },
+    {
+      "timestamp": "2026-06-17T00:00:00+00:00",
+      "actual": 0.08593,
+      "predicted": 0.088306
+    },
+    {
+      "timestamp": "2026-06-18T00:00:00+00:00",
+      "actual": 0.08352,
+      "predicted": 0.087464
+    },
+    {
+      "timestamp": "2026-06-19T00:00:00+00:00",
+      "actual": 0.08357,
+      "predicted": 0.08482
+    },
+    {
+      "timestamp": "2026-06-20T00:00:00+00:00",
+      "actual": 0.0837,
+      "predicted": 0.08474
+    },
+    {
+      "timestamp": "2026-06-21T00:00:00+00:00",
+      "actual": 0.08224,
+      "predicted": 0.084845
+    },
+    {
+      "timestamp": "2026-06-22T00:00:00+00:00",
+      "actual": 0.08247,
+      "predicted": 0.083489
+    },
+    {
+      "timestamp": "2026-06-23T00:00:00+00:00",
+      "actual": 0.07889,
+      "predicted": 0.083702
+    },
+    {
+      "timestamp": "2026-06-24T00:00:00+00:00",
+      "actual": 0.07612,
+      "predicted": 0.081818
+    },
+    {
+      "timestamp": "2026-06-25T00:00:00+00:00",
+      "actual": 0.07491,
+      "predicted": 0.079226
+    },
+    {
+      "timestamp": "2026-06-26T00:00:00+00:00",
+      "actual": 0.0758,
+      "predicted": 0.079228
+    },
+    {
+      "timestamp": "2026-06-27T00:00:00+00:00",
+      "actual": 0.0745,
+      "predicted": 0.080217
+    },
+    {
+      "timestamp": "2026-06-28T00:00:00+00:00",
+      "actual": 0.0732,
+      "predicted": 0.077968
+    },
+    {
+      "timestamp": "2026-06-29T00:00:00+00:00",
+      "actual": 0.07344,
+      "predicted": 0.076615
+    },
+    {
+      "timestamp": "2026-06-30T00:00:00+00:00",
+      "actual": 0.07208,
+      "predicted": 0.077292
+    },
+    {
+      "timestamp": "2026-07-01T00:00:00+00:00",
+      "actual": 0.07222,
+      "predicted": 0.076471
+    },
+    {
+      "timestamp": "2026-07-02T00:00:00+00:00",
+      "actual": 0.07418,
+      "predicted": 0.076527
+    },
+    {
+      "timestamp": "2026-07-03T00:00:00+00:00",
+      "actual": 0.07754,
+      "predicted": 0.077633
+    },
+    {
+      "timestamp": "2026-07-04T00:00:00+00:00",
+      "actual": 0.07766,
+      "predicted": 0.080235
+    },
+    {
+      "timestamp": "2026-07-05T00:00:00+00:00",
+      "actual": 0.07787,
+      "predicted": 0.07938
+    },
+    {
+      "timestamp": "2026-07-06T00:00:00+00:00",
+      "actual": 0.07666,
+      "predicted": 0.080566
+    },
+    {
+      "timestamp": "2026-07-07T00:00:00+00:00",
+      "actual": 0.07418,
+      "predicted": 0.079017
+    },
+    {
+      "timestamp": "2026-07-08T00:00:00+00:00",
+      "actual": 0.07243,
+      "predicted": 0.076899
+    },
+    {
+      "timestamp": "2026-07-09T00:00:00+00:00",
+      "actual": 0.07289,
+      "predicted": 0.075384
+    },
+    {
+      "timestamp": "2026-07-10T00:00:00+00:00",
+      "actual": 0.07412,
+      "predicted": 0.07566
+    },
+    {
+      "timestamp": "2026-07-11T00:00:00+00:00",
+      "actual": 0.07321,
+      "predicted": 0.076577
+    },
+    {
+      "timestamp": "2026-07-12T00:00:00+00:00",
+      "actual": 0.07272,
+      "predicted": 0.075935
+    },
+    {
+      "timestamp": "2026-07-13T00:00:00+00:00",
+      "actual": 0.07197,
+      "predicted": 0.075391
+    },
+    {
+      "timestamp": "2026-07-14T00:00:00+00:00",
+      "actual": 0.07445,
+      "predicted": 0.074501
+    },
+    {
+      "timestamp": "2026-07-15T00:00:00+00:00",
+      "actual": 0.07409,
+      "predicted": 0.077017
+    },
+    {
+      "timestamp": "2026-07-16T00:00:00+00:00",
+      "actual": 0.07236,
+      "predicted": 0.076642
+    },
+    {
+      "timestamp": "2026-07-17T00:00:00+00:00",
+      "actual": 0.07256,
+      "predicted": 0.074747
+    },
+    {
+      "timestamp": "2026-07-18T00:00:00+00:00",
+      "actual": 0.07253,
+      "predicted": 0.074842
+    },
+    {
+      "timestamp": "2026-07-19T00:00:00+00:00",
+      "actual": 0.07243,
+      "predicted": 0.07479
+    },
+    {
+      "timestamp": "2026-07-20T00:00:00+00:00",
+      "actual": 0.07219,
+      "predicted": 0.074699
+    },
+    {
+      "timestamp": "2026-07-21T00:00:00+00:00",
+      "actual": 0.07339,
+      "predicted": 0.075032
+    },
+    {
+      "timestamp": "2026-07-22T00:00:00+00:00",
+      "actual": 0.07299,
+      "predicted": 0.075919
+    },
+    {
+      "timestamp": "2026-07-23T00:00:00+00:00",
+      "actual": 0.0692,
+      "predicted": 0.075463
+    },
+    {
+      "timestamp": "2026-07-24T00:00:00+00:00",
+      "actual": 0.06957,
+      "predicted": 0.072978
+    },
+    {
+      "timestamp": "2026-07-25T00:00:00+00:00",
+      "actual": 0.07172,
+      "predicted": 0.072965
+    },
+    {
+      "timestamp": "2026-07-26T00:00:00+00:00",
+      "actual": 0.07338,
+      "predicted": 0.074857
+    },
+    {
+      "timestamp": "2026-07-27T00:00:00+00:00",
+      "actual": 0.07038,
+      "predicted": 0.076743
+    },
+    {
+      "timestamp": "2026-07-28T00:00:00+00:00",
+      "actual": 0.07089,
+      "predicted": 0.07279
+    },
+    {
+      "timestamp": "2026-07-29T00:00:00+00:00",
+      "actual": 0.07014,
+      "predicted": 0.073999
+    },
+    {
+      "timestamp": "2026-07-30T00:00:00+00:00",
+      "actual": 0.07059,
+      "predicted": 0.073055
+    },
+    {
+      "timestamp": "2026-07-31T00:00:00+00:00",
+      "actual": 0.06962,
+      "predicted": 0.073178
+    },
+    {
+      "timestamp": "2026-08-01T00:00:00+00:00",
+      "actual": 0.06914,
+      "predicted": 0.072551
+    },
+    {
+      "timestamp": "2026-08-02T00:00:00+00:00",
+      "actual": 0.07081,
+      "predicted": 0.071751
+    },
+    {
+      "timestamp": "2026-08-03T00:00:00+00:00",
+      "actual": 0.07023,
+      "predicted": 0.073409
+    },
+    {
+      "timestamp": "2026-08-04T00:00:00+00:00",
+      "actual": 0.07007,
+      "predicted": 0.072641
+    },
+    {
+      "timestamp": "2026-08-05T00:00:00+00:00",
+      "actual": 0.07004,
+      "predicted": 0.072527
+    },
+    {
+      "timestamp": "2026-08-06T00:00:00+00:00",
+      "actual": 0.06909,
+      "predicted": 0.072538
+    },
+    {
+      "timestamp": "2026-08-07T00:00:00+00:00",
+      "actual": 0.06965,
+      "predicted": 0.071846
+    },
+    {
+      "timestamp": "2026-08-08T00:00:00+00:00",
+      "actual": 0.07043,
+      "predicted": 0.072216
+    },
+    {
+      "timestamp": "2026-08-09T00:00:00+00:00",
+      "actual": 0.06935,
+      "predicted": 0.073101
+    },
+    {
+      "timestamp": "2026-08-10T00:00:00+00:00",
+      "actual": 0.0697,
+      "predicted": 0.071719
+    },
+    {
+      "timestamp": "2026-08-11T00:00:00+00:00",
+      "actual": 0.0719,
+      "predicted": 0.072316
+    },
+    {
+      "timestamp": "2026-08-12T00:00:00+00:00",
+      "actual": 0.06969,
+      "predicted": 0.075345
+    },
+    {
+      "timestamp": "2026-08-13T00:00:00+00:00",
+      "actual": 0.07019,
+      "predicted": 0.072335
+    },
+    {
+      "timestamp": "2026-08-14T00:00:00+00:00",
+      "actual": 0.07007,
+      "predicted": 0.072955
+    },
+    {
+      "timestamp": "2026-08-15T00:00:00+00:00",
+      "actual": 0.06961,
+      "predicted": 0.072607
+    },
+    {
+      "timestamp": "2026-08-16T00:00:00+00:00",
+      "actual": 0.0696,
+      "predicted": 0.072098
+    },
+    {
+      "timestamp": "2026-08-17T00:00:00+00:00",
+      "actual": 0.07041,
+      "predicted": 0.072075
+    },
+    {
+      "timestamp": "2026-08-18T00:00:00+00:00",
+      "actual": 0.07026,
+      "predicted": 0.073213
+    },
+    {
+      "timestamp": "2026-08-19T00:00:00+00:00",
+      "actual": 0.07504,
+      "predicted": 0.072876
+    },
+    {
+      "timestamp": "2026-08-20T00:00:00+00:00",
+      "actual": 0.08047,
+      "predicted": 0.078811
+    },
+    {
+      "timestamp": "2026-08-21T00:00:00+00:00",
+      "actual": 0.09155,
+      "predicted": 0.084178
+    },
+    {
+      "timestamp": "2026-08-22T00:00:00+00:00",
+      "actual": 0.09188,
+      "predicted": 0.094994
+    },
+    {
+      "timestamp": "2026-08-23T00:00:00+00:00",
+      "actual": 0.09342,
+      "predicted": 0.096032
+    },
+    {
+      "timestamp": "2026-08-24T00:00:00+00:00",
+      "actual": 0.09011,
+      "predicted": 0.097668
+    },
+    {
+      "timestamp": "2026-08-25T00:00:00+00:00",
+      "actual": 0.0857,
+      "predicted": 0.093357
+    },
+    {
+      "timestamp": "2026-08-26T00:00:00+00:00",
+      "actual": 0.0877,
+      "predicted": 0.087533
+    },
+    {
+      "timestamp": "2026-08-27T00:00:00+00:00",
+      "actual": 0.08914,
+      "predicted": 0.090284
+    },
+    {
+      "timestamp": "2026-08-28T00:00:00+00:00",
+      "actual": 0.08524,
+      "predicted": 0.092052
+    },
+    {
+      "timestamp": "2026-08-29T00:00:00+00:00",
+      "actual": 0.08529,
+      "predicted": 0.087113
+    },
+    {
+      "timestamp": "2026-08-30T00:00:00+00:00",
+      "actual": 0.08205,
+      "predicted": 0.086597
+    },
+    {
+      "timestamp": "2026-08-31T00:00:00+00:00",
+      "actual": 0.08285,
+      "predicted": 0.083316
+    },
+    {
+      "timestamp": "2026-09-01T00:00:00+00:00",
+      "actual": 0.08167,
+      "predicted": 0.084585
+    },
+    {
+      "timestamp": "2026-09-02T00:00:00+00:00",
+      "actual": 0.08176,
+      "predicted": 0.083228
+    },
+    {
+      "timestamp": "2026-09-03T00:00:00+00:00",
+      "actual": 0.08782,
+      "predicted": 0.083493
+    },
+    {
+      "timestamp": "2026-09-04T00:00:00+00:00",
+      "actual": 0.08477,
+      "predicted": 0.090384
+    },
+    {
+      "timestamp": "2026-09-05T00:00:00+00:00",
+      "actual": 0.08969,
+      "predicted": 0.085772
+    },
+    {
+      "timestamp": "2026-09-06T00:00:00+00:00",
+      "actual": 0.09092,
+      "predicted": 0.092005
+    },
+    {
+      "timestamp": "2026-09-07T00:00:00+00:00",
+      "actual": 0.09051,
+      "predicted": 0.093229
+    },
+    {
+      "timestamp": "2026-09-08T00:00:00+00:00",
+      "actual": 0.09005,
+      "predicted": 0.092399
+    },
+    {
+      "timestamp": "2026-09-09T00:00:00+00:00",
+      "actual": 0.08616,
+      "predicted": 0.092253
+    },
+    {
+      "timestamp": "2026-09-10T00:00:00+00:00",
+      "actual": 0.08291,
+      "predicted": 0.087379
+    },
+    {
+      "timestamp": "2026-09-11T00:00:00+00:00",
+      "actual": 0.0843,
+      "predicted": 0.084106
+    },
+    {
+      "timestamp": "2026-09-12T00:00:00+00:00",
+      "actual": 0.08483,
+      "predicted": 0.086366
+    },
+    {
+      "timestamp": "2026-09-13T00:00:00+00:00",
+      "actual": 0.0824,
+      "predicted": 0.085886
+    },
+    {
+      "timestamp": "2026-09-14T00:00:00+00:00",
+      "actual": 0.08366,
+      "predicted": 0.083013
+    },
+    {
+      "timestamp": "2026-09-15T00:00:00+00:00",
+      "actual": 0.08008,
+      "predicted": 0.085607
+    },
+    {
+      "timestamp": "2026-09-16T00:00:00+00:00",
+      "actual": 0.08091,
+      "predicted": 0.0815
+    },
+    {
+      "timestamp": "2026-09-17T00:00:00+00:00",
+      "actual": 0.08172,
+      "predicted": 0.082809
+    },
+    {
+      "timestamp": "2026-09-18T00:00:00+00:00",
+      "actual": 0.08747,
+      "predicted": 0.083428
+    },
+    {
+      "timestamp": "2026-09-19T00:00:00+00:00",
+      "actual": 0.08772,
+      "predicted": 0.089469
+    },
+    {
+      "timestamp": "2026-09-20T00:00:00+00:00",
+      "actual": 0.0873,
+      "predicted": 0.089181
+    },
+    {
+      "timestamp": "2026-09-21T00:00:00+00:00",
+      "actual": 0.09986,
+      "predicted": 0.088063
+    },
+    {
+      "timestamp": "2026-09-22T00:00:00+00:00",
+      "actual": 0.10044,
+      "predicted": 0.100406
+    },
+    {
+      "timestamp": "2026-09-23T00:00:00+00:00",
+      "actual": 0.09272,
+      "predicted": 0.10185
+    },
+    {
+      "timestamp": "2026-09-24T00:00:00+00:00",
+      "actual": 0.09579,
+      "predicted": 0.092238
+    },
+    {
+      "timestamp": "2026-09-25T00:00:00+00:00",
+      "actual": 0.09897,
+      "predicted": 0.096503
+    },
+    {
+      "timestamp": "2026-09-26T00:00:00+00:00",
+      "actual": 0.09673,
+      "predicted": 0.099527
+    },
+    {
+      "timestamp": "2026-09-27T00:00:00+00:00",
+      "actual": 0.0969,
+      "predicted": 0.096795
+    },
+    {
+      "timestamp": "2026-09-28T00:00:00+00:00",
+      "actual": 0.09396,
+      "predicted": 0.097764
+    },
+    {
+      "timestamp": "2026-09-29T00:00:00+00:00",
+      "actual": 0.09389,
+      "predicted": 0.093575
+    },
+    {
+      "timestamp": "2026-09-30T00:00:00+00:00",
+      "actual": 0.09456,
+      "predicted": 0.094662
+    },
+    {
+      "timestamp": "2026-10-01T00:00:00+00:00",
+      "actual": 0.09437,
+      "predicted": 0.09516
+    },
+    {
+      "timestamp": "2026-10-02T00:00:00+00:00",
+      "actual": 0.09293,
+      "predicted": 0.095174
+    },
+    {
+      "timestamp": "2026-10-03T00:00:00+00:00",
+      "actual": 0.09282,
+      "predicted": 0.093502
+    },
+    {
+      "timestamp": "2026-10-04T00:00:00+00:00",
+      "actual": 0.09591,
+      "predicted": 0.093055
+    },
+    {
+      "timestamp": "2026-10-05T00:00:00+00:00",
+      "actual": 0.09542,
+      "predicted": 0.096848
+    },
+    {
+      "timestamp": "2026-10-06T00:00:00+00:00",
+      "actual": 0.09369,
+      "predicted": 0.095768
+    },
+    {
+      "timestamp": "2026-10-07T00:00:00+00:00",
+      "actual": 0.08904,
+      "predicted": 0.094074
+    },
+    {
+      "timestamp": "2026-10-08T00:00:00+00:00",
+      "actual": 0.08257,
+      "predicted": 0.089448
+    }
+  ]
 }

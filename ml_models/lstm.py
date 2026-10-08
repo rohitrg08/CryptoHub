@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import os
 import random
@@ -25,7 +25,7 @@ def run_lstm_model(
         import tensorflow as tf
         from tensorflow.keras import Sequential
         from tensorflow.keras.callbacks import EarlyStopping
-        from tensorflow.keras.layers import Dense, Dropout, LSTM
+        from tensorflow.keras.layers import Bidirectional, Dense, Dropout, LSTM
     except ImportError as exc:  # pragma: no cover
         raise ImportError("tensorflow is not installed.") from exc
 
@@ -64,14 +64,14 @@ def run_lstm_model(
 
     model = Sequential(
         [
-            LSTM(64, return_sequences=True, input_shape=(window, 1)),
-            Dropout(0.1),
-            LSTM(32),
+            Bidirectional(LSTM(64, return_sequences=True), input_shape=(window, 1)),
+            Dropout(0.15),
+            Bidirectional(LSTM(32)),
             Dense(16, activation="relu"),
             Dense(1),
         ]
     )
-    model.compile(optimizer="adam", loss="mse")
+    model.compile(optimizer="adam", loss="huber")
     model.fit(
         X_train,
         y_train,

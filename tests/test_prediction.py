@@ -8,7 +8,9 @@ from .test_features import make_sample_history
 
 def test_recursive_prediction_has_future_horizons() -> None:
     history = make_sample_history(250)
-    random_forest_trainer.train_symbol("BTC", history_frame=history, persist=True)
+    artifact = random_forest_trainer.train_symbol("BTC", history_frame=history, persist=False)
+    from ml_models.model_registry import model_registry
+    model_registry._cache["BTC"] = artifact
 
     predictor = RandomForestPredictor()
     result = predictor.predict("BTC", history)

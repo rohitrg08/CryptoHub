@@ -10,6 +10,7 @@ from backend.services.decision_engine import decision_engine
 from backend.services.mongo_logger import mongo_logger
 from backend.services.sentiment_service import sentiment_service
 from backend.services.technical_analysis_service import technical_analysis_service
+from ml_models.ensemble import ensemble_trainer
 from ml_models.model_registry import model_registry
 from ml_models.predictor import random_forest_predictor
 from ml_models.trainer import random_forest_trainer
@@ -56,8 +57,9 @@ class RandomForestService:
             },
         )
 
+        model_name = metadata.get("model_type", "Ensemble (RF + XGBoost)")
         model_metric_row = {
-            "model_name": "Random Forest",
+            "model_name": model_name,
             "mae": float(metrics.get("mae", 0.0)),
             "rmse": float(metrics.get("rmse", 0.0)),
             "r2": float(metrics.get("r2", 0.0)),
@@ -77,8 +79,8 @@ class RandomForestService:
             "predicted_7_day_price": round(float(prediction["predicted_7_day_price"]), 6),
             "expected_change_pct": round(float(prediction["expected_change_pct"]), 6),
             "expected_change_amount": round(float(prediction["expected_change_amount"]), 6),
-            "best_model": "Random Forest",
-            "model_type": metadata.get("model_type", "RandomForestRegressor"),
+            "best_model": model_name,
+            "model_type": model_name,
             "model_metrics": [model_metric_row],
             "metrics": metrics,
             "backtest": artifact.get("backtest", []),
@@ -142,7 +144,7 @@ class RandomForestService:
         requested_symbols = [normalize_symbol(symbol) for symbol in (symbols or supported_symbols())]
         results: dict[str, Any] = {}
         for symbol in requested_symbols:
-            result = random_forest_trainer.train_symbol(symbol, persist=True)
+            result = ensemble_trainer.train_symbol(symbol, persist=True)
             results[symbol] = {
                 "training_samples": result["training_samples"],
                 "validation_samples": result["validation_samples"],

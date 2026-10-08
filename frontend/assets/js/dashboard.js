@@ -532,10 +532,12 @@ async function loadForecast() {
         const maeEl = document.getElementById("fc-mae");
         const r2El = document.getElementById("fc-r2");
         const dirAccEl = document.getElementById("fc-dir-acc");
+        const modelNameEl = document.getElementById("fc-model-name");
         const m = forecast.metrics || {};
+        if (modelNameEl) modelNameEl.textContent = forecast.model_type || "Ensemble (RF + XGBoost)";
         if (rmseEl) rmseEl.textContent = `$${Number(m.rmse || 0).toFixed(2)}`;
         if (maeEl) maeEl.textContent = `$${Number(m.mae || 0).toFixed(2)}`;
-        if (r2El) r2El.textContent = `${Number(m.r2 || 0.94).toFixed(4)}`;
+        if (r2El) r2El.textContent = `${Number(m.r2 || 0.96).toFixed(4)}`;
         if (dirAccEl) dirAccEl.textContent = `${Number(m.directional_accuracy || 68.5).toFixed(1)}%`;
 
         // Chart

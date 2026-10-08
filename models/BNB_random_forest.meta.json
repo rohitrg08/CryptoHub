@@ -1,12 +1,12 @@
 {
   "symbol": "BNB",
-  "model_type": "RandomForestRegressor",
-  "model_version": "rf-v2",
-  "last_trained": "2026-08-14T14:36:18.707236+00:00",
-  "training_samples": 459,
-  "validation_samples": 81,
-  "test_samples": 81,
-  "dataset_rows": 540,
+  "model_type": "Ensemble (RF + XGBoost)",
+  "model_version": "ens-v1",
+  "last_trained": "2026-10-08T15:45:36.333390+00:00",
+  "training_samples": 849,
+  "validation_samples": 150,
+  "test_samples": 150,
+  "dataset_rows": 999,
   "feature_columns": [
     "open",
     "high",
@@ -37,22 +37,769 @@
     "day_of_week",
     "month"
   ],
-  "best_params": {
-    "random_state": 42,
-    "n_jobs": -1,
-    "n_estimators": 600,
-    "max_depth": null,
-    "min_samples_split": 2,
-    "min_samples_leaf": 1
-  },
+  "weights": [
+    0.55,
+    0.45
+  ],
   "metrics": {
-    "mae": 13.08999,
-    "rmse": 20.20443,
-    "r2": -1.20284,
-    "mape": 1.604816,
-    "directional_accuracy": 2.469136,
-    "prediction_error_pct": -1.604816
+    "mae": 10.020992,
+    "rmse": 14.311607,
+    "r2": 0.96264,
+    "mape": 1.524491,
+    "directional_accuracy": 52.0,
+    "prediction_error_pct": 0.172647
   },
-  "validation_rmse": 49.746669,
-  "model_path": "D:\\Cryptohub\\models\\BNB_random_forest.joblib"
+  "validation_rmse": 17.975732,
+  "backtest": [
+    {
+      "timestamp": "2026-05-12T00:00:00+00:00",
+      "actual": 664.95,
+      "predicted": 673.48551
+    },
+    {
+      "timestamp": "2026-05-13T00:00:00+00:00",
+      "actual": 671.68,
+      "predicted": 667.953989
+    },
+    {
+      "timestamp": "2026-05-14T00:00:00+00:00",
+      "actual": 678.27,
+      "predicted": 673.406706
+    },
+    {
+      "timestamp": "2026-05-15T00:00:00+00:00",
+      "actual": 672.38,
+      "predicted": 680.192329
+    },
+    {
+      "timestamp": "2026-05-16T00:00:00+00:00",
+      "actual": 656.2,
+      "predicted": 673.877164
+    },
+    {
+      "timestamp": "2026-05-17T00:00:00+00:00",
+      "actual": 649.48,
+      "predicted": 657.381231
+    },
+    {
+      "timestamp": "2026-05-18T00:00:00+00:00",
+      "actual": 643.53,
+      "predicted": 650.95368
+    },
+    {
+      "timestamp": "2026-05-19T00:00:00+00:00",
+      "actual": 640.02,
+      "predicted": 645.175322
+    },
+    {
+      "timestamp": "2026-05-20T00:00:00+00:00",
+      "actual": 649.5,
+      "predicted": 641.321939
+    },
+    {
+      "timestamp": "2026-05-21T00:00:00+00:00",
+      "actual": 658.58,
+      "predicted": 651.935277
+    },
+    {
+      "timestamp": "2026-05-22T00:00:00+00:00",
+      "actual": 650.44,
+      "predicted": 661.139927
+    },
+    {
+      "timestamp": "2026-05-23T00:00:00+00:00",
+      "actual": 656.26,
+      "predicted": 652.264428
+    },
+    {
+      "timestamp": "2026-05-24T00:00:00+00:00",
+      "actual": 656.57,
+      "predicted": 659.085075
+    },
+    {
+      "timestamp": "2026-05-25T00:00:00+00:00",
+      "actual": 663.15,
+      "predicted": 659.625673
+    },
+    {
+      "timestamp": "2026-05-26T00:00:00+00:00",
+      "actual": 656.43,
+      "predicted": 666.144637
+    },
+    {
+      "timestamp": "2026-05-27T00:00:00+00:00",
+      "actual": 648.84,
+      "predicted": 658.545696
+    },
+    {
+      "timestamp": "2026-05-28T00:00:00+00:00",
+      "actual": 638.24,
+      "predicted": 650.944426
+    },
+    {
+      "timestamp": "2026-05-29T00:00:00+00:00",
+      "actual": 643.1,
+      "predicted": 641.436243
+    },
+    {
+      "timestamp": "2026-05-30T00:00:00+00:00",
+      "actual": 718.74,
+      "predicted": 646.31486
+    },
+    {
+      "timestamp": "2026-05-31T00:00:00+00:00",
+      "actual": 710.55,
+      "predicted": 715.226555
+    },
+    {
+      "timestamp": "2026-06-01T00:00:00+00:00",
+      "actual": 693.1,
+      "predicted": 706.462525
+    },
+    {
+      "timestamp": "2026-06-02T00:00:00+00:00",
+      "actual": 650.69,
+      "predicted": 691.089444
+    },
+    {
+      "timestamp": "2026-06-03T00:00:00+00:00",
+      "actual": 620.63,
+      "predicted": 651.038134
+    },
+    {
+      "timestamp": "2026-06-04T00:00:00+00:00",
+      "actual": 604.53,
+      "predicted": 621.441689
+    },
+    {
+      "timestamp": "2026-06-05T00:00:00+00:00",
+      "actual": 572.22,
+      "predicted": 607.13528
+    },
+    {
+      "timestamp": "2026-06-06T00:00:00+00:00",
+      "actual": 574.53,
+      "predicted": 572.408738
+    },
+    {
+      "timestamp": "2026-06-07T00:00:00+00:00",
+      "actual": 604.44,
+      "predicted": 576.08872
+    },
+    {
+      "timestamp": "2026-06-08T00:00:00+00:00",
+      "actual": 601.86,
+      "predicted": 603.077102
+    },
+    {
+      "timestamp": "2026-06-09T00:00:00+00:00",
+      "actual": 593.44,
+      "predicted": 600.746508
+    },
+    {
+      "timestamp": "2026-06-10T00:00:00+00:00",
+      "actual": 586.53,
+      "predicted": 592.729469
+    },
+    {
+      "timestamp": "2026-06-11T00:00:00+00:00",
+      "actual": 605.76,
+      "predicted": 586.41063
+    },
+    {
+      "timestamp": "2026-06-12T00:00:00+00:00",
+      "actual": 603.83,
+      "predicted": 604.906354
+    },
+    {
+      "timestamp": "2026-06-13T00:00:00+00:00",
+      "actual": 609.65,
+      "predicted": 604.495526
+    },
+    {
+      "timestamp": "2026-06-14T00:00:00+00:00",
+      "actual": 616.79,
+      "predicted": 607.859684
+    },
+    {
+      "timestamp": "2026-06-15T00:00:00+00:00",
+      "actual": 617.87,
+      "predicted": 614.791365
+    },
+    {
+      "timestamp": "2026-06-16T00:00:00+00:00",
+      "actual": 604.94,
+      "predicted": 615.520028
+    },
+    {
+      "timestamp": "2026-06-17T00:00:00+00:00",
+      "actual": 601.63,
+      "predicted": 605.979694
+    },
+    {
+      "timestamp": "2026-06-18T00:00:00+00:00",
+      "actual": 578.48,
+      "predicted": 601.75609
+    },
+    {
+      "timestamp": "2026-06-19T00:00:00+00:00",
+      "actual": 581.42,
+      "predicted": 579.9147
+    },
+    {
+      "timestamp": "2026-06-20T00:00:00+00:00",
+      "actual": 588.03,
+      "predicted": 581.665425
+    },
+    {
+      "timestamp": "2026-06-21T00:00:00+00:00",
+      "actual": 584.23,
+      "predicted": 588.847208
+    },
+    {
+      "timestamp": "2026-06-22T00:00:00+00:00",
+      "actual": 590.15,
+      "predicted": 586.071343
+    },
+    {
+      "timestamp": "2026-06-23T00:00:00+00:00",
+      "actual": 578.08,
+      "predicted": 591.401476
+    },
+    {
+      "timestamp": "2026-06-24T00:00:00+00:00",
+      "actual": 564.67,
+      "predicted": 579.7515
+    },
+    {
+      "timestamp": "2026-06-25T00:00:00+00:00",
+      "actual": 560.62,
+      "predicted": 562.326873
+    },
+    {
+      "timestamp": "2026-06-26T00:00:00+00:00",
+      "actual": 567.64,
+      "predicted": 563.113714
+    },
+    {
+      "timestamp": "2026-06-27T00:00:00+00:00",
+      "actual": 557.2,
+      "predicted": 573.179215
+    },
+    {
+      "timestamp": "2026-06-28T00:00:00+00:00",
+      "actual": 551.07,
+      "predicted": 564.558372
+    },
+    {
+      "timestamp": "2026-06-29T00:00:00+00:00",
+      "actual": 559.52,
+      "predicted": 560.937541
+    },
+    {
+      "timestamp": "2026-06-30T00:00:00+00:00",
+      "actual": 546.52,
+      "predicted": 566.887643
+    },
+    {
+      "timestamp": "2026-07-01T00:00:00+00:00",
+      "actual": 550.44,
+      "predicted": 555.538261
+    },
+    {
+      "timestamp": "2026-07-02T00:00:00+00:00",
+      "actual": 558.96,
+      "predicted": 559.674147
+    },
+    {
+      "timestamp": "2026-07-03T00:00:00+00:00",
+      "actual": 573.81,
+      "predicted": 566.388982
+    },
+    {
+      "timestamp": "2026-07-04T00:00:00+00:00",
+      "actual": 575.37,
+      "predicted": 578.682861
+    },
+    {
+      "timestamp": "2026-07-05T00:00:00+00:00",
+      "actual": 589.87,
+      "predicted": 579.107286
+    },
+    {
+      "timestamp": "2026-07-06T00:00:00+00:00",
+      "actual": 586.01,
+      "predicted": 593.123938
+    },
+    {
+      "timestamp": "2026-07-07T00:00:00+00:00",
+      "actual": 576.82,
+      "predicted": 584.531791
+    },
+    {
+      "timestamp": "2026-07-08T00:00:00+00:00",
+      "actual": 568.66,
+      "predicted": 576.410623
+    },
+    {
+      "timestamp": "2026-07-09T00:00:00+00:00",
+      "actual": 568.72,
+      "predicted": 569.307241
+    },
+    {
+      "timestamp": "2026-07-10T00:00:00+00:00",
+      "actual": 575.43,
+      "predicted": 568.720257
+    },
+    {
+      "timestamp": "2026-07-11T00:00:00+00:00",
+      "actual": 574.65,
+      "predicted": 577.420744
+    },
+    {
+      "timestamp": "2026-07-12T00:00:00+00:00",
+      "actual": 573.91,
+      "predicted": 578.395184
+    },
+    {
+      "timestamp": "2026-07-13T00:00:00+00:00",
+      "actual": 567.49,
+      "predicted": 577.5402
+    },
+    {
+      "timestamp": "2026-07-14T00:00:00+00:00",
+      "actual": 581.87,
+      "predicted": 567.124237
+    },
+    {
+      "timestamp": "2026-07-15T00:00:00+00:00",
+      "actual": 580.55,
+      "predicted": 583.405086
+    },
+    {
+      "timestamp": "2026-07-16T00:00:00+00:00",
+      "actual": 572.45,
+      "predicted": 582.94994
+    },
+    {
+      "timestamp": "2026-07-17T00:00:00+00:00",
+      "actual": 568.09,
+      "predicted": 575.072642
+    },
+    {
+      "timestamp": "2026-07-18T00:00:00+00:00",
+      "actual": 570.65,
+      "predicted": 570.58128
+    },
+    {
+      "timestamp": "2026-07-19T00:00:00+00:00",
+      "actual": 571.06,
+      "predicted": 572.91638
+    },
+    {
+      "timestamp": "2026-07-20T00:00:00+00:00",
+      "actual": 571.27,
+      "predicted": 574.067275
+    },
+    {
+      "timestamp": "2026-07-21T00:00:00+00:00",
+      "actual": 573.95,
+      "predicted": 575.961047
+    },
+    {
+      "timestamp": "2026-07-22T00:00:00+00:00",
+      "actual": 571.08,
+      "predicted": 579.077305
+    },
+    {
+      "timestamp": "2026-07-23T00:00:00+00:00",
+      "actual": 567.41,
+      "predicted": 573.965726
+    },
+    {
+      "timestamp": "2026-07-24T00:00:00+00:00",
+      "actual": 564.9,
+      "predicted": 568.826442
+    },
+    {
+      "timestamp": "2026-07-25T00:00:00+00:00",
+      "actual": 568.94,
+      "predicted": 570.12024
+    },
+    {
+      "timestamp": "2026-07-26T00:00:00+00:00",
+      "actual": 575.32,
+      "predicted": 573.445801
+    },
+    {
+      "timestamp": "2026-07-27T00:00:00+00:00",
+      "actual": 566.28,
+      "predicted": 581.877845
+    },
+    {
+      "timestamp": "2026-07-28T00:00:00+00:00",
+      "actual": 571.29,
+      "predicted": 570.997737
+    },
+    {
+      "timestamp": "2026-07-29T00:00:00+00:00",
+      "actual": 571.99,
+      "predicted": 576.462083
+    },
+    {
+      "timestamp": "2026-07-30T00:00:00+00:00",
+      "actual": 591.99,
+      "predicted": 577.085962
+    },
+    {
+      "timestamp": "2026-07-31T00:00:00+00:00",
+      "actual": 587.01,
+      "predicted": 597.45187
+    },
+    {
+      "timestamp": "2026-08-01T00:00:00+00:00",
+      "actual": 575.13,
+      "predicted": 590.089295
+    },
+    {
+      "timestamp": "2026-08-02T00:00:00+00:00",
+      "actual": 588.46,
+      "predicted": 576.998198
+    },
+    {
+      "timestamp": "2026-08-03T00:00:00+00:00",
+      "actual": 589.35,
+      "predicted": 587.86416
+    },
+    {
+      "timestamp": "2026-08-04T00:00:00+00:00",
+      "actual": 593.18,
+      "predicted": 589.168341
+    },
+    {
+      "timestamp": "2026-08-05T00:00:00+00:00",
+      "actual": 593.85,
+      "predicted": 592.997722
+    },
+    {
+      "timestamp": "2026-08-06T00:00:00+00:00",
+      "actual": 592.39,
+      "predicted": 594.56977
+    },
+    {
+      "timestamp": "2026-08-07T00:00:00+00:00",
+      "actual": 592.57,
+      "predicted": 591.056932
+    },
+    {
+      "timestamp": "2026-08-08T00:00:00+00:00",
+      "actual": 600.66,
+      "predicted": 593.298785
+    },
+    {
+      "timestamp": "2026-08-09T00:00:00+00:00",
+      "actual": 602.23,
+      "predicted": 601.156964
+    },
+    {
+      "timestamp": "2026-08-10T00:00:00+00:00",
+      "actual": 599.23,
+      "predicted": 600.498464
+    },
+    {
+      "timestamp": "2026-08-11T00:00:00+00:00",
+      "actual": 616.69,
+      "predicted": 596.811802
+    },
+    {
+      "timestamp": "2026-08-12T00:00:00+00:00",
+      "actual": 610.44,
+      "predicted": 617.402854
+    },
+    {
+      "timestamp": "2026-08-13T00:00:00+00:00",
+      "actual": 610.71,
+      "predicted": 610.463367
+    },
+    {
+      "timestamp": "2026-08-14T00:00:00+00:00",
+      "actual": 607.96,
+      "predicted": 610.282711
+    },
+    {
+      "timestamp": "2026-08-15T00:00:00+00:00",
+      "actual": 607.76,
+      "predicted": 607.410779
+    },
+    {
+      "timestamp": "2026-08-16T00:00:00+00:00",
+      "actual": 602.98,
+      "predicted": 612.297469
+    },
+    {
+      "timestamp": "2026-08-17T00:00:00+00:00",
+      "actual": 605.8,
+      "predicted": 608.192352
+    },
+    {
+      "timestamp": "2026-08-18T00:00:00+00:00",
+      "actual": 603.94,
+      "predicted": 613.251392
+    },
+    {
+      "timestamp": "2026-08-19T00:00:00+00:00",
+      "actual": 627.51,
+      "predicted": 611.130464
+    },
+    {
+      "timestamp": "2026-08-20T00:00:00+00:00",
+      "actual": 654.8,
+      "predicted": 636.029006
+    },
+    {
+      "timestamp": "2026-08-21T00:00:00+00:00",
+      "actual": 687.0,
+      "predicted": 655.878187
+    },
+    {
+      "timestamp": "2026-08-22T00:00:00+00:00",
+      "actual": 695.28,
+      "predicted": 685.636943
+    },
+    {
+      "timestamp": "2026-08-23T00:00:00+00:00",
+      "actual": 702.37,
+      "predicted": 693.039137
+    },
+    {
+      "timestamp": "2026-08-24T00:00:00+00:00",
+      "actual": 704.31,
+      "predicted": 700.290413
+    },
+    {
+      "timestamp": "2026-08-25T00:00:00+00:00",
+      "actual": 694.41,
+      "predicted": 701.200075
+    },
+    {
+      "timestamp": "2026-08-26T00:00:00+00:00",
+      "actual": 707.52,
+      "predicted": 686.581245
+    },
+    {
+      "timestamp": "2026-08-27T00:00:00+00:00",
+      "actual": 711.85,
+      "predicted": 704.496021
+    },
+    {
+      "timestamp": "2026-08-28T00:00:00+00:00",
+      "actual": 691.47,
+      "predicted": 710.185292
+    },
+    {
+      "timestamp": "2026-08-29T00:00:00+00:00",
+      "actual": 692.58,
+      "predicted": 686.453548
+    },
+    {
+      "timestamp": "2026-08-30T00:00:00+00:00",
+      "actual": 684.74,
+      "predicted": 689.571092
+    },
+    {
+      "timestamp": "2026-08-31T00:00:00+00:00",
+      "actual": 691.44,
+      "predicted": 678.563591
+    },
+    {
+      "timestamp": "2026-09-01T00:00:00+00:00",
+      "actual": 683.0,
+      "predicted": 686.677731
+    },
+    {
+      "timestamp": "2026-09-02T00:00:00+00:00",
+      "actual": 688.84,
+      "predicted": 683.138103
+    },
+    {
+      "timestamp": "2026-09-03T00:00:00+00:00",
+      "actual": 725.22,
+      "predicted": 688.996396
+    },
+    {
+      "timestamp": "2026-09-04T00:00:00+00:00",
+      "actual": 721.37,
+      "predicted": 724.102743
+    },
+    {
+      "timestamp": "2026-09-05T00:00:00+00:00",
+      "actual": 766.53,
+      "predicted": 718.438222
+    },
+    {
+      "timestamp": "2026-09-06T00:00:00+00:00",
+      "actual": 753.0,
+      "predicted": 761.93178
+    },
+    {
+      "timestamp": "2026-09-07T00:00:00+00:00",
+      "actual": 739.98,
+      "predicted": 746.834178
+    },
+    {
+      "timestamp": "2026-09-08T00:00:00+00:00",
+      "actual": 752.02,
+      "predicted": 735.433309
+    },
+    {
+      "timestamp": "2026-09-09T00:00:00+00:00",
+      "actual": 722.64,
+      "predicted": 751.277433
+    },
+    {
+      "timestamp": "2026-09-10T00:00:00+00:00",
+      "actual": 708.72,
+      "predicted": 721.192785
+    },
+    {
+      "timestamp": "2026-09-11T00:00:00+00:00",
+      "actual": 726.75,
+      "predicted": 708.740956
+    },
+    {
+      "timestamp": "2026-09-12T00:00:00+00:00",
+      "actual": 727.59,
+      "predicted": 727.178134
+    },
+    {
+      "timestamp": "2026-09-13T00:00:00+00:00",
+      "actual": 716.41,
+      "predicted": 728.679907
+    },
+    {
+      "timestamp": "2026-09-14T00:00:00+00:00",
+      "actual": 720.42,
+      "predicted": 715.282722
+    },
+    {
+      "timestamp": "2026-09-15T00:00:00+00:00",
+      "actual": 712.06,
+      "predicted": 720.936347
+    },
+    {
+      "timestamp": "2026-09-16T00:00:00+00:00",
+      "actual": 725.92,
+      "predicted": 711.852271
+    },
+    {
+      "timestamp": "2026-09-17T00:00:00+00:00",
+      "actual": 738.36,
+      "predicted": 725.484027
+    },
+    {
+      "timestamp": "2026-09-18T00:00:00+00:00",
+      "actual": 761.31,
+      "predicted": 738.001809
+    },
+    {
+      "timestamp": "2026-09-19T00:00:00+00:00",
+      "actual": 762.02,
+      "predicted": 760.252857
+    },
+    {
+      "timestamp": "2026-09-20T00:00:00+00:00",
+      "actual": 772.56,
+      "predicted": 762.383641
+    },
+    {
+      "timestamp": "2026-09-21T00:00:00+00:00",
+      "actual": 799.41,
+      "predicted": 771.571224
+    },
+    {
+      "timestamp": "2026-09-22T00:00:00+00:00",
+      "actual": 788.38,
+      "predicted": 798.107867
+    },
+    {
+      "timestamp": "2026-09-23T00:00:00+00:00",
+      "actual": 767.38,
+      "predicted": 786.422398
+    },
+    {
+      "timestamp": "2026-09-24T00:00:00+00:00",
+      "actual": 776.69,
+      "predicted": 770.248018
+    },
+    {
+      "timestamp": "2026-09-25T00:00:00+00:00",
+      "actual": 777.13,
+      "predicted": 778.179207
+    },
+    {
+      "timestamp": "2026-09-26T00:00:00+00:00",
+      "actual": 773.59,
+      "predicted": 778.955822
+    },
+    {
+      "timestamp": "2026-09-27T00:00:00+00:00",
+      "actual": 778.9,
+      "predicted": 774.562244
+    },
+    {
+      "timestamp": "2026-09-28T00:00:00+00:00",
+      "actual": 763.96,
+      "predicted": 782.489526
+    },
+    {
+      "timestamp": "2026-09-29T00:00:00+00:00",
+      "actual": 758.66,
+      "predicted": 766.541802
+    },
+    {
+      "timestamp": "2026-09-30T00:00:00+00:00",
+      "actual": 769.27,
+      "predicted": 760.032176
+    },
+    {
+      "timestamp": "2026-10-01T00:00:00+00:00",
+      "actual": 771.75,
+      "predicted": 771.262264
+    },
+    {
+      "timestamp": "2026-10-02T00:00:00+00:00",
+      "actual": 768.25,
+      "predicted": 773.740783
+    },
+    {
+      "timestamp": "2026-10-03T00:00:00+00:00",
+      "actual": 786.88,
+      "predicted": 770.89177
+    },
+    {
+      "timestamp": "2026-10-04T00:00:00+00:00",
+      "actual": 795.43,
+      "predicted": 789.59754
+    },
+    {
+      "timestamp": "2026-10-05T00:00:00+00:00",
+      "actual": 786.43,
+      "predicted": 797.700949
+    },
+    {
+      "timestamp": "2026-10-06T00:00:00+00:00",
+      "actual": 779.5,
+      "predicted": 788.121163
+    },
+    {
+      "timestamp": "2026-10-07T00:00:00+00:00",
+      "actual": 772.45,
+      "predicted": 782.663617
+    },
+    {
+      "timestamp": "2026-10-08T00:00:00+00:00",
+      "actual": 733.82,
+      "predicted": 776.423256
+    }
+  ]
 }
