@@ -20,6 +20,7 @@ function baseChartOptions() {
     return {
         responsive: true,
         maintainAspectRatio: false,
+        resizeDelay: 100,
         animation: {
             duration: 350,
             easing: "easeOutQuart",
@@ -61,6 +62,7 @@ function baseChartOptions() {
                 grid: { color: palette.borderMuted, drawBorder: false },
             },
             y: {
+                grace: "5%",
                 ticks: {
                     color: palette.textMuted,
                     font: { size: 11 },
@@ -104,7 +106,10 @@ export function resizeAllCharts() {
     Object.values(chartRegistry).forEach((chart) => {
         try {
             if (chart && typeof chart.resize === "function") {
-                chart.resize();
+                const canvas = chart.canvas;
+                if (canvas && canvas.offsetParent !== null && canvas.clientHeight > 0) {
+                    chart.resize();
+                }
             }
         } catch (_) {}
     });
@@ -421,7 +426,7 @@ export function renderBacktestChart(points, symbol) {
             labels: points.map((p) => new Date(p.date || p.timestamp).toLocaleDateString([], { month: "short", day: "numeric" })),
             datasets: [
                 {
-                    label: "Actual Historical",
+                    label: `${symbol} Actual Historical`,
                     data: points.map((p) => p.actual_close || p.actual),
                     borderColor: palette.emerald,
                     borderWidth: 1.8,
@@ -439,7 +444,18 @@ export function renderBacktestChart(points, symbol) {
                 },
             ],
         },
-        options: baseChartOptions(),
+        options: {
+            ...baseChartOptions(),
+            plugins: {
+                ...baseChartOptions().plugins,
+                tooltip: {
+                    ...baseChartOptions().plugins.tooltip,
+                    callbacks: {
+                        label: (ctx) => ` ${ctx.dataset.label}: $${Number(ctx.parsed.y).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+                    },
+                },
+            },
+        },
     });
 }
 

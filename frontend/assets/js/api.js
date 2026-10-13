@@ -276,3 +276,16 @@ export async function deletePortfolioEntry(entryId) {
         method: "DELETE",
     }, true);
 }
+
+export async function getModelInfo(symbol) {
+    return apiRequest(`/models/${symbol}`);
+}
+
+export async function getModelMetrics(symbol) {
+    return apiRequest(`/analytics/model-metrics/${symbol}`);
+}
+
+export async function getBacktest(symbol) {
+    return apiRequest(`/analytics/backtest/${symbol}`);
+}
+

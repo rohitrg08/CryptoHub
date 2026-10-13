@@ -1,179 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CryptoHub | Institutional Crypto Analytics & Forecasting Terminal</title>
-    <meta name="description" content="Professional cryptocurrency analytics terminal featuring multi-asset machine learning forecasts, algorithmic decision support, real-time prices, and portfolio tracking." />
+    <title>CryptoHub — Quantitative Cryptocurrency Analytics & ML Forecasting Terminal</title>
+    <meta name="description"
+        content="Institutional cryptocurrency analytics platform featuring multi-asset machine learning forecasts, algorithmic decision support, real-time prices, and portfolio tracking." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@600;700;800&display=swap"
+        rel="stylesheet" />
     <link rel="stylesheet" href="/assets/css/styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-    <!-- Real-Time Top Market Ticker Ribbon -->
-    <aside class="ticker-ribbon" aria-label="Live Market Ticker">
-        <div class="ticker-track" id="ticker-track">
-            <span class="ticker-item"><span class="symbol">BTC/USD</span> <span class="price">$0.00</span> <span class="change">0.00%</span></span>
-            <span class="ticker-item"><span class="symbol">ETH/USD</span> <span class="price">$0.00</span> <span class="change">0.00%</span></span>
-            <span class="ticker-item"><span class="symbol">SOL/USD</span> <span class="price">$0.00</span> <span class="change">0.00%</span></span>
-            <span class="ticker-item"><span class="symbol">BNB/USD</span> <span class="price">$0.00</span> <span class="change">0.00%</span></span>
-            <span class="ticker-item"><span class="symbol">XRP/USD</span> <span class="price">$0.00</span> <span class="change">0.00%</span></span>
-            <span class="ticker-item"><span class="symbol">ADA/USD</span> <span class="price">$0.00</span> <span class="change">0.00%</span></span>
-            <span class="ticker-item"><span class="symbol">DOGE/USD</span> <span class="price">$0.00</span> <span class="change">0.00%</span></span>
-            <span class="ticker-item"><span class="symbol">AVAX/USD</span> <span class="price">$0.00</span> <span class="change">0.00%</span></span>
-        </div>
-    </aside>
 
-    <div class="app-shell">
-        <!-- Terminal Header -->
-        <header class="terminal-header">
-            <div class="brand-section">
-                <a href="#/portfolio" class="brand-logo" id="brand-link">
-                    <div class="logo-symbol">CH</div>
-                    <div class="brand-title">
-                        CryptoHub
-                        <span class="terminal-badge">PRO TERMINAL</span>
+<body class="terminal-body">
+    <!-- App Shell Layout -->
+    <div class="terminal-shell" id="app-shell">
+        <!-- Sidebar Navigation -->
+        <aside class="terminal-sidebar" id="terminal-sidebar" aria-label="Main Navigation">
+            <div class="sidebar-header">
+                <a href="#/dashboard" class="brand-link" id="brand-link">
+                    <div class="brand-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-title">CryptoHub</span>
+                        <span class="brand-tag">PRO TERMINAL</span>
                     </div>
                 </a>
-                <div class="live-beacon" id="connection-beacon" title="Market Data Connection Status">
-                    <span class="pulse-dot" id="beacon-dot"></span>
-                    <span id="beacon-text">LIVE ENGINE</span>
-                </div>
+                <button class="sidebar-close-btn" id="btn-sidebar-close" aria-label="Close sidebar">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
             </div>
 
-            <div class="header-controls">
-                <!-- Currency Toggle -->
-                <div class="currency-selector" aria-label="Currency Selector">
-                    <button class="currency-btn active" data-currency="USD">USD $</button>
-                    <button class="currency-btn" data-currency="EUR">EUR €</button>
-                    <button class="currency-btn" data-currency="INR">INR ₹</button>
+            <!-- Main Nav Items -->
+            <nav class="sidebar-nav" role="tablist">
+                <div class="nav-group-label">ANALYTICS &amp; FORECASTING</div>
+                <button class="nav-item active tab-btn" data-view="dashboard" role="tab" aria-selected="true">
+                    <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span class="nav-label">Dashboard</span>
+                    <span class="tab-indicator"></span>
+                </button>
+
+                <button class="nav-item tab-btn" data-view="markets" role="tab" aria-selected="false">
+                    <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    <span class="nav-label">Crypto Markets</span>
+                    <span class="tab-indicator"></span>
+                </button>
+
+                <button class="nav-item tab-btn" data-view="forecast" role="tab" aria-selected="false">
+                    <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    <span class="nav-label">Price Forecasting</span>
+                    <span class="nav-badge">ML</span>
+                    <span class="tab-indicator"></span>
+                </button>
+
+                <button class="nav-item tab-btn" data-view="comparison" role="tab" aria-selected="false">
+                    <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 3h5v5"></path>
+                        <path d="M8 21H3v-5"></path>
+                        <path d="M21 3l-7.5 7.5"></path>
+                        <path d="M3 21l7.5-7.5"></path>
+                    </svg>
+                    <span class="nav-label">Model Comparison</span>
+                    <span class="tab-indicator"></span>
+                </button>
+
+                <button class="nav-item tab-btn" data-view="historical" role="tab" aria-selected="false">
+                    <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span class="nav-label">Historical Trends</span>
+                    <span class="tab-indicator"></span>
+                </button>
+
+                <button class="nav-item tab-btn" data-view="decision" role="tab" aria-selected="false">
+                    <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="6"></circle>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                    <span class="nav-label">Decision Engine</span>
+                    <span class="tab-indicator"></span>
+                </button>
+
+                <button class="nav-item tab-btn" data-view="sentiment" role="tab" aria-selected="false">
+                    <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span class="nav-label">News Sentiment</span>
+                    <span class="tab-indicator"></span>
+                </button>
+
+                <div class="nav-group-label" style="margin-top: 14px;">ACCOUNT &amp; ASSETS</div>
+                <button class="nav-item tab-btn" data-view="portfolio" role="tab" aria-selected="false">
+                    <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z">
+                        </path>
+                        <path d="M10 4h4v3h-4z"></path>
+                    </svg>
+                    <span class="nav-label">Portfolio Vault</span>
+                    <span class="tab-indicator"></span>
+                </button>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <div class="sidebar-status-box">
+                    <div class="status-indicator-dot" id="sidebar-status-dot"></div>
+                    <div class="status-info">
+                        <span class="status-title">Feed Status</span>
+                        <span class="status-sub" id="sidebar-status-text">Connected</span>
+                    </div>
+                </div>
+                <div class="sidebar-actions">
+                    <button class="sidebar-action-btn" id="sidebar-btn-settings" title="Terminal Settings">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path
+                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                            </path>
+                        </svg>
+                        <span>Settings</span>
+                    </button>
+                    <button class="sidebar-action-btn danger" id="sidebar-btn-logout" title="Sign Out"
+                        style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span>Logout</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Body Wrapper -->
+        <div class="terminal-main-wrap">
+            <!-- Top Navigation Bar -->
+            <header class="terminal-topbar">
+                <div class="topbar-left">
+                    <button class="mobile-toggle-btn" id="btn-mobile-menu" aria-label="Toggle navigation">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="topbar-title-area">
+                        <span class="topbar-breadcrumb">CryptoHub Terminal</span>
+                        <h1 class="topbar-heading" id="topbar-view-title">Executive Dashboard</h1>
+                    </div>
                 </div>
 
-                <!-- Auth Controls -->
-                <div class="auth-widget" id="header-auth-widget">
-                    <!-- Guest View -->
-                    <div id="auth-guest-controls">
-                        <button class="btn btn-secondary btn-sm" id="btn-open-login">Sign In</button>
-                        <button class="btn btn-primary btn-sm" id="btn-open-signup">Create Account</button>
+                <!-- Asset Quick Switcher Pills -->
+                <div class="topbar-center">
+                    <div class="asset-chips-wrap" id="asset-chips-container"
+                        aria-label="Cryptocurrency quick selection">
+                        <button class="asset-chip active" data-symbol="BTC">BTC</button>
+                        <button class="asset-chip" data-symbol="ETH">ETH</button>
+                        <button class="asset-chip" data-symbol="SOL">SOL</button>
+                        <button class="asset-chip" data-symbol="BNB">BNB</button>
+                        <button class="asset-chip" data-symbol="XRP">XRP</button>
+                        <button class="asset-chip" data-symbol="ADA">ADA</button>
+                        <button class="asset-chip" data-symbol="DOGE">DOGE</button>
+                        <button class="asset-chip" data-symbol="AVAX">AVAX</button>
+                    </div>
+                </div>
+
+                <!-- Topbar Right Controls -->
+                <div class="topbar-right">
+                    <!-- Engine Connection Beacon -->
+                    <div class="live-beacon" id="connection-beacon" title="Real-Time Market Data Stream">
+                        <span class="pulse-dot" id="beacon-dot"></span>
+                        <span class="beacon-label" id="beacon-text">LIVE ENGINE</span>
                     </div>
 
-                    <!-- Authenticated View -->
-                    <div id="auth-user-controls" class="hidden" style="display: none;">
-                        <div class="user-profile-chip" id="user-chip-toggle">
-                            <div class="user-avatar" id="user-avatar-initials">TR</div>
-                            <div class="user-info-text">
-                                <span class="user-name" id="header-username">trader</span>
-                                <span class="user-role-badge" id="header-user-role">TRADER</span>
-                            </div>
-                            <span style="font-size: 10px; color: var(--text-muted); margin-left: 2px;">▼</span>
+                    <!-- Currency Switcher -->
+                    <div class="currency-selector" aria-label="Display Currency">
+                        <button class="currency-btn active" data-currency="USD">USD $</button>
+                        <button class="currency-btn" data-currency="EUR">EUR €</button>
+                        <button class="currency-btn" data-currency="INR">INR ₹</button>
+                    </div>
 
-                            <div class="user-dropdown-menu" id="user-dropdown">
-                                <div class="dropdown-header">
-                                    <div style="font-weight: 600; font-size: 12px;" id="dropdown-full-name">Trader Account</div>
-                                    <div class="dropdown-email" id="dropdown-user-email">trader@example.com</div>
+                    <!-- Refresh Button -->
+                    <button class="icon-action-btn" id="btn-global-refresh" title="Refresh Live Market Data">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <polyline points="1 20 1 14 7 14"></polyline>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                        </svg>
+                    </button>
+
+                    <!-- User Account / Auth Widget -->
+                    <div class="auth-widget" id="header-auth-widget">
+                        <!-- Guest Mode -->
+                        <div id="auth-guest-controls" class="auth-btn-group">
+                            <button class="btn btn-secondary btn-sm" id="btn-open-login">Sign In</button>
+                            <button class="btn btn-primary btn-sm" id="btn-open-signup">Create Account</button>
+                        </div>
+
+                        <!-- Authenticated User -->
+                        <div id="auth-user-controls" class="hidden" style="display: none;">
+                            <div class="user-profile-chip" id="user-chip-toggle">
+                                <div class="user-avatar" id="user-avatar-initials">TR</div>
+                                <div class="user-info-text">
+                                    <span class="user-name" id="header-username">trader</span>
+                                    <span class="user-role-badge" id="header-user-role">TRADER</span>
                                 </div>
-                                <button class="dropdown-item" id="menu-goto-portfolio">
-                                    Portfolio Vault
-                                </button>
-                                <button class="dropdown-item danger" id="btn-logout">
-                                    Sign Out
-                                </button>
+                                <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+
+                                <div class="user-dropdown-menu" id="user-dropdown">
+                                    <div class="dropdown-header">
+                                        <div class="dropdown-user-name" id="dropdown-full-name">Trader Account</div>
+                                        <div class="dropdown-email" id="dropdown-user-email">trader@cryptohub.trade
+                                        </div>
+                                    </div>
+                                    <button class="dropdown-item" id="menu-goto-portfolio">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path
+                                                d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z">
+                                            </path>
+                                        </svg>
+                                        Portfolio Vault
+                                    </button>
+                                    <button class="dropdown-item" id="menu-open-settings">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                            <path
+                                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                                            </path>
+                                        </svg>
+                                        Terminal Config
+                                    </button>
+                                    <div class="dropdown-divider"></div>
+                                    <button class="dropdown-item danger" id="btn-logout">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                            <polyline points="16 17 21 12 16 7"></polyline>
+                                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                                        </svg>
+                                        Sign Out
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-        <!-- Navigation Bar & Quick Asset Switcher -->
-        <nav class="terminal-nav-bar" aria-label="Navigation Tabs">
-            <div class="view-tabs" role="tablist">
-                <button class="tab-btn active" data-view="portfolio" role="tab" aria-selected="true">
-                    <span class="tab-indicator"></span> Portfolio
-                </button>
-                <button class="tab-btn" data-view="forecast" role="tab" aria-selected="false">
-                    <span class="tab-indicator"></span> Forecast
-                </button>
-                <button class="tab-btn" data-view="historical" role="tab" aria-selected="false">
-                    <span class="tab-indicator"></span> Historical
-                </button>
-                <button class="tab-btn" data-view="decision" role="tab" aria-selected="false">
-                    <span class="tab-indicator"></span> Decision Engine
-                </button>
-                <button class="tab-btn" data-view="comparison" role="tab" aria-selected="false">
-                    <span class="tab-indicator"></span> Market Matrix
-                </button>
-                <button class="tab-btn" data-view="sentiment" role="tab" aria-selected="false">
-                    <span class="tab-indicator"></span> News Sentiment
-                </button>
-            </div>
-
-            <!-- Asset Quick Switcher Chips -->
-            <div class="asset-chips-wrap" id="asset-chips-container" aria-label="Cryptocurrency quick selection">
-                <button class="asset-chip active" data-symbol="BTC">BTC</button>
-                <button class="asset-chip" data-symbol="ETH">ETH</button>
-                <button class="asset-chip" data-symbol="SOL">SOL</button>
-                <button class="asset-chip" data-symbol="BNB">BNB</button>
-                <button class="asset-chip" data-symbol="XRP">XRP</button>
-                <button class="asset-chip" data-symbol="ADA">ADA</button>
-                <button class="asset-chip" data-symbol="DOGE">DOGE</button>
-                <button class="asset-chip" data-symbol="AVAX">AVAX</button>
-            </div>
-        </nav>
-
-        <!-- Views Container (Single Page Architecture: Instant 0ms Switching) -->
-        <main class="views-container">
-            <!-- ================= VIEW 1: PORTFOLIO ================= -->
-            <section class="spa-view active" id="view-portfolio">
-                <!-- Portfolio Stats Row -->
-                <div class="grid-4" style="margin-bottom: 16px;">
-                    <div class="metric-tile">
-                        <span class="metric-label">Portfolio Valuation</span>
-                        <span class="metric-value" id="port-total-val">$0.00</span>
-                        <span class="metric-sub" id="port-holdings-count">0 assets tracked</span>
-                    </div>
-                    <div class="metric-tile">
-                        <span class="metric-label">Total Unrealized PnL</span>
-                        <span class="metric-value" id="port-total-pnl">$0.00</span>
-                        <span class="metric-sub" id="port-total-pnl-pct">0.00%</span>
-                    </div>
-                    <div class="metric-tile">
-                        <span class="metric-label">Top Asset Allocation</span>
-                        <span class="metric-value" id="port-top-asset">-</span>
-                        <span class="metric-sub" id="port-top-asset-pct">-</span>
-                    </div>
-                    <div class="metric-tile">
-                        <span class="metric-label">Account Status</span>
-                        <span class="metric-value" id="port-auth-status" style="font-size: 15px; color: var(--accent-emerald);">Active Session</span>
-                        <span class="metric-sub" id="port-user-badge">Role: Trader</span>
-                    </div>
+            <!-- Real-Time Top Market Ticker Ribbon -->
+            <aside class="ticker-ribbon" aria-label="Live Market Ticker">
+                <div class="ticker-track" id="ticker-track">
+                    <span class="ticker-item" data-symbol="BTC"><span class="symbol">BTC/USD</span> <span
+                            class="price">$0.00</span> <span class="change">0.00%</span></span>
+                    <span class="ticker-item" data-symbol="ETH"><span class="symbol">ETH/USD</span> <span
+                            class="price">$0.00</span> <span class="change">0.00%</span></span>
+                    <span class="ticker-item" data-symbol="SOL"><span class="symbol">SOL/USD</span> <span
+                            class="price">$0.00</span> <span class="change">0.00%</span></span>
+                    <span class="ticker-item" data-symbol="BNB"><span class="symbol">BNB/USD</span> <span
+                            class="price">$0.00</span> <span class="change">0.00%</span></span>
+                    <span class="ticker-item" data-symbol="XRP"><span class="symbol">XRP/USD</span> <span
+                            class="price">$0.00</span> <span class="change">0.00%</span></span>
+                    <span class="ticker-item" data-symbol="ADA"><span class="symbol">ADA/USD</span> <span
+                            class="price">$0.00</span> <span class="change">0.00%</span></span>
+                    <span class="ticker-item" data-symbol="DOGE"><span class="symbol">DOGE/USD</span> <span
+                            class="price">$0.00</span> <span class="change">0.00%</span></span>
+                    <span class="ticker-item" data-symbol="AVAX"><span class="symbol">AVAX/USD</span> <span
+                            class="price">$0.00</span> <span class="change">0.00%</span></span>
                 </div>
+            </aside>
 
-                <!-- Guest Banner (Shown when not logged in) -->
-                <div id="portfolio-guest-banner" class="card" style="margin-bottom: 16px; border-left: 4px solid var(--accent-indigo); display: none;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
-                        <div>
-                            <h3 style="font-size: 15px; margin-bottom: 4px; font-weight: 600;">Sign in to access your personal Holdings Vault</h3>
-                            <p style="color: var(--text-secondary); font-size: 13px;">Authenticate to record positions, calculate portfolio profit &amp; loss, and manage your private holdings.</p>
+            <!-- Views Container -->
+            <main class="views-container">
+                <!-- ================= VIEW 0: EXECUTIVE DASHBOARD ================= -->
+                <section class="spa-view active" id="view-dashboard">
+                    <!-- Dashboard KPI Row -->
+                    <div class="grid-4" style="margin-bottom: 20px;">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-label">Benchmark Spot (BTC)</span>
+                                <span class="metric-badge" id="dash-btc-badge">BTC/USD</span>
+                            </div>
+                            <div class="metric-val font-mono" id="dash-btc-price">$0.00</div>
+                            <div class="metric-sub" id="dash-btc-change">
+                                <span class="trend-icon">●</span> 24h Move: 0.00%
+                            </div>
                         </div>
-                        <div>
-                            <button class="btn btn-primary btn-sm" id="banner-login-btn">Sign In</button>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-label">Tracked Market Assets</span>
+                                <span class="metric-badge">SUPPORTED</span>
+                            </div>
+                            <div class="metric-val font-mono">8 Cryptos</div>
+                            <div class="metric-sub">
+                                High-liquidity verified feeds
+                            </div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-label">AI Consensus Signal</span>
+                                <span class="metric-badge" id="dash-signal-asset">BTC</span>
+                            </div>
+                            <div class="metric-val" id="dash-consensus-signal" style="color: var(--accent-amber);">HOLD
+                            </div>
+                            <div class="metric-sub" id="dash-signal-sub">Conviction: 50/100</div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-label">Predictive Engine</span>
+                                <span class="metric-badge">ENSEMBLE</span>
+                            </div>
+                            <div class="metric-val" style="font-size: 16px; font-weight: 600;">Random Forest + XGBoost
+                            </div>
+                            <div class="metric-sub">Recursive multi-step horizons</div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Main Portfolio Layout: Add Asset + Holdings Table -->
-                <div class="grid-layout-main">
-                    <!-- Holdings Table -->
+                    <!-- Main Dashboard Content Split -->
+                    <div class="grid-layout-main">
+                        <!-- Left: Live Market Matrix -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h2 class="card-title">Cryptocurrency Market Matrix</h2>
+                                    <p class="card-subtitle">Real-time spot quotes, 24h deltas, and projected moves</p>
+                                </div>
+                                <button class="btn btn-secondary btn-sm" id="btn-dash-goto-markets">View All Markets
+                                    &rarr;</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Asset</th>
+                                            <th style="text-align: right;">Spot Price</th>
+                                            <th style="text-align: right;">24h Change</th>
+                                            <th style="text-align: right;">Projected Move</th>
+                                            <th style="text-align: right;">Signal</th>
+                                            <th style="text-align: right;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dash-markets-table-body">
+                                        <tr>
+                                            <td colspan="6" class="table-loading-cell">Loading live crypto spot
+                                                matrix...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Right: Active Forecast Spotlight -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h2 class="card-title"><span id="dash-spotlight-symbol">BTC</span> Forecast
+                                        Spotlight</h2>
+                                    <p class="card-subtitle">Active machine-learning projection</p>
+                                </div>
+                                <span class="status-pill status-pill-active">T+1 TARGET</span>
+                            </div>
+
+                            <div class="spotlight-body">
+                                <div class="spotlight-price-box">
+                                    <span class="spotlight-label">T+1 Target Projection</span>
+                                    <div class="spotlight-price font-mono" id="dash-spotlight-target">$0.00</div>
+                                    <div class="spotlight-delta font-mono" id="dash-spotlight-delta">Expected: +0.00%
+                                    </div>
+                                </div>
+
+                                <div class="spotlight-metrics-grid">
+                                    <div class="spotlight-metric-item">
+                                        <span class="spotlight-meta-label">Current Spot</span>
+                                        <strong class="font-mono" id="dash-spotlight-current">$0.00</strong>
+                                    </div>
+                                    <div class="spotlight-metric-item">
+                                        <span class="spotlight-meta-label">Model Engine</span>
+                                        <strong id="dash-spotlight-model">Random Forest</strong>
+                                    </div>
+                                    <div class="spotlight-metric-item">
+                                        <span class="spotlight-meta-label">Algorithm MAPE</span>
+                                        <strong class="font-mono" id="dash-spotlight-mape">1.51%</strong>
+                                    </div>
+                                    <div class="spotlight-metric-item">
+                                        <span class="spotlight-meta-label">Risk Profile</span>
+                                        <strong id="dash-spotlight-risk">Low</strong>
+                                    </div>
+                                </div>
+
+                                <div class="spotlight-action">
+                                    <button class="btn btn-primary" id="btn-dash-deep-forecast" style="width: 100%;">
+                                        Open Full Forecast Analytics &rarr;
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= VIEW 1: CRYPTOCURRENCY MARKETS ================= -->
+                <section class="spa-view" id="view-markets">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header" style="flex-wrap: wrap; gap: 12px;">
                             <div>
-                                <h2 class="card-title">Holdings Vault</h2>
-                                <p class="card-subtitle">Real-time valuation based on live spot market rates</p>
+                                <h2 class="card-title">Supported Cryptocurrency Markets</h2>
+                                <p class="card-subtitle">Streaming spot prices and 24-hour ranges for the 8 platform
+                                    assets</p>
                             </div>
-                            <button class="btn btn-secondary btn-sm" id="btn-refresh-portfolio">Refresh</button>
+                            <div class="table-tools">
+                                <div class="table-search-box">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                    <input type="text" class="table-search-input" id="markets-search-input"
+                                        placeholder="Filter by symbol or name..." />
+                                </div>
+                                <button class="btn btn-secondary btn-sm" id="btn-refresh-markets">Refresh
+                                    Quotes</button>
+                            </div>
                         </div>
 
                         <div class="table-responsive">
@@ -181,416 +474,659 @@
                                 <thead>
                                     <tr>
                                         <th>Asset</th>
-                                        <th>Holdings</th>
-                                        <th>Avg Buy Price</th>
-                                        <th>Spot Price</th>
-                                        <th>Current Value</th>
-                                        <th>Unrealized PnL</th>
+                                        <th>Symbol</th>
+                                        <th style="text-align: right;">Spot Rate</th>
+                                        <th style="text-align: right;">24h Net Move</th>
+                                        <th style="text-align: right;">24h High</th>
+                                        <th style="text-align: right;">24h Low</th>
+                                        <th style="text-align: right;">Volatility Spread</th>
                                         <th style="text-align: right;">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="portfolio-table-body">
+                                <tbody id="markets-table-body">
                                     <tr>
-                                        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 32px;">Loading portfolio...</td>
+                                        <td colspan="8" class="table-loading-cell">Loading cryptocurrency market
+                                            records...</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                </section>
 
-                    <!-- Add Transaction Panel -->
-                    <div class="card">
+                <!-- ================= VIEW 2: AI PRICE FORECASTING ================= -->
+                <section class="spa-view" id="view-forecast">
+                    <!-- Forecast Hero Stats -->
+                    <div class="grid-4" style="margin-bottom: 20px;">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-label"><span id="fc-symbol-name">BTC</span> Spot Rate</span>
+                                <span class="metric-badge">SPOT FEED</span>
+                            </div>
+                            <div class="metric-val font-mono" id="fc-current-price">$0.00</div>
+                            <div class="metric-sub" id="fc-spot-change">24h Move: 0.00%</div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-label">T+1 Projected Target</span>
+                                <span class="metric-badge">HORIZON 1D</span>
+                            </div>
+                            <div class="metric-val font-mono" id="fc-next-day-target">$0.00</div>
+                            <div class="metric-sub" id="fc-next-day-delta" style="color: var(--accent-emerald);">Delta:
+                                +0.00%</div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-label">Signal Recommendation</span>
+                                <span class="metric-badge">DECISION</span>
+                            </div>
+                            <div class="metric-val" id="fc-rec-signal" style="color: var(--accent-amber);">HOLD</div>
+                            <div class="metric-sub" id="fc-rec-score">Signal Score: 50/100</div>
+                        </div>
+
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-label">Model Accuracy (MAPE)</span>
+                                <span class="metric-badge">VERIFIED</span>
+                            </div>
+                            <div class="metric-val font-mono" id="fc-model-mape">0.00%</div>
+                            <div class="metric-sub" id="fc-model-name">Random Forest Regressor</div>
+                        </div>
+                    </div>
+
+                    <!-- Forecast Chart + Signal Panel -->
+                    <div class="grid-layout-main">
+                        <!-- Projection Chart -->
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <div>
+                                    <h2 class="card-title">Multi-Step Price Projection</h2>
+                                    <p class="card-subtitle">Spot candle history plotted alongside recursive
+                                        machine-learning projections</p>
+                                </div>
+                                <span class="terminal-badge font-mono" id="fc-chart-badge">BTC / USD</span>
+                            </div>
+                            <div class="chart-container-wrap chart-lg">
+                                <canvas id="priceChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Horizon Cards & Model Diagnostics -->
+                        <div class="side-panel-column">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">Forecast Horizons</h2>
+                                    <span class="terminal-badge">TARGETS</span>
+                                </div>
+                                <div class="horizon-list">
+                                    <div class="horizon-row">
+                                        <div class="horizon-tag">1 DAY (T+1)</div>
+                                        <div class="horizon-price font-mono" id="fc-h-1d">$0.00</div>
+                                    </div>
+                                    <div class="horizon-row">
+                                        <div class="horizon-tag">3 DAYS (T+3)</div>
+                                        <div class="horizon-price font-mono" id="fc-h-3d">$0.00</div>
+                                    </div>
+                                    <div class="horizon-row">
+                                        <div class="horizon-tag">5 DAYS (T+5)</div>
+                                        <div class="horizon-price font-mono" id="fc-h-5d">$0.00</div>
+                                    </div>
+                                    <div class="horizon-row">
+                                        <div class="horizon-tag">7 DAYS (T+7)</div>
+                                        <div class="horizon-price font-mono" id="fc-h-7d">$0.00</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">Evaluation Metrics</h2>
+                                    <span class="terminal-badge">BACKTEST</span>
+                                </div>
+                                <div class="metrics-spec-list">
+                                    <div class="spec-row">
+                                        <span class="spec-label">RMSE Error</span>
+                                        <strong class="font-mono spec-val" id="fc-rmse">-</strong>
+                                    </div>
+                                    <div class="spec-row">
+                                        <span class="spec-label">MAE Error</span>
+                                        <strong class="font-mono spec-val" id="fc-mae">-</strong>
+                                    </div>
+                                    <div class="spec-row">
+                                        <span class="spec-label">R² Score</span>
+                                        <strong class="font-mono spec-val" id="fc-r2">-</strong>
+                                    </div>
+                                    <div class="spec-row">
+                                        <span class="spec-label">Directional Accuracy</span>
+                                        <strong class="font-mono spec-val" id="fc-dir-acc"
+                                            style="color: var(--accent-emerald);">-</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">Model Specifications</h2>
+                                    <span class="terminal-badge">ARCHITECTURE</span>
+                                </div>
+                                <div class="metrics-spec-list">
+                                    <div class="spec-row">
+                                        <span class="spec-label">Engine Type</span>
+                                        <span class="spec-val" id="fc-spec-type">RandomForestRegressor</span>
+                                    </div>
+                                    <div class="spec-row">
+                                        <span class="spec-label">Training Samples</span>
+                                        <span class="font-mono spec-val" id="fc-train-samples">849 samples</span>
+                                    </div>
+                                    <div class="spec-row">
+                                        <span class="spec-label">Features Used</span>
+                                        <span class="font-mono spec-val" id="fc-features-count">28 quantitative
+                                            features</span>
+                                    </div>
+                                    <div class="spec-row">
+                                        <span class="spec-label">Last Retrained</span>
+                                        <span class="font-mono spec-val" id="fc-last-trained">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= VIEW 3: MODEL COMPARISON & BACKTESTING ================= -->
+                <section class="spa-view" id="view-comparison">
+                    <!-- Forecast Move Ranking Chart -->
+                    <div class="card chart-card" style="margin-bottom: 20px;">
                         <div class="card-header">
                             <div>
-                                <h2 class="card-title">Record Holding</h2>
-                                <p class="card-subtitle">Add buy order to your portfolio</p>
+                                <h2 class="card-title">Cross-Asset Expected Move Ranking</h2>
+                                <p class="card-subtitle">Projected percentage movement over the upcoming horizon across
+                                    all 8 assets</p>
                             </div>
+                            <span class="terminal-badge">CROSS ASSET</span>
                         </div>
-
-                        <form id="form-add-portfolio">
-                            <div class="form-group">
-                                <label class="form-label" for="add-port-symbol">Cryptocurrency</label>
-                                <select class="form-select" id="add-port-symbol" required>
-                                    <option value="BTC">Bitcoin (BTC)</option>
-                                    <option value="ETH">Ethereum (ETH)</option>
-                                    <option value="SOL">Solana (SOL)</option>
-                                    <option value="BNB">Binance Coin (BNB)</option>
-                                    <option value="XRP">Ripple (XRP)</option>
-                                    <option value="ADA">Cardano (ADA)</option>
-                                    <option value="DOGE">Dogecoin (DOGE)</option>
-                                    <option value="AVAX">Avalanche (AVAX)</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label" for="add-port-quantity">Quantity</label>
-                                <input type="number" step="any" min="0.00000001" class="form-input" id="add-port-quantity" placeholder="0.5" required />
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label" for="add-port-buy-price">Average Buy Price (USD)</label>
-                                <input type="number" step="any" min="0.000001" class="form-input" id="add-port-buy-price" placeholder="62000" required />
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label" for="add-port-target-price">Target Sell Price (Optional)</label>
-                                <input type="number" step="any" class="form-input" id="add-port-target-price" placeholder="75000" />
-                            </div>
-
-                            <button type="submit" class="btn btn-emerald" style="width: 100%; margin-top: 8px;">
-                                + Add Transaction
-                            </button>
-                            <p id="port-form-status" style="font-size: 11px; margin-top: 8px; text-align: center; color: var(--text-muted);"></p>
-                        </form>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================= VIEW 2: AI FORECAST ================= -->
-            <section class="spa-view" id="view-forecast">
-                <!-- Forecast Hero Stats -->
-                <div class="grid-4" style="margin-bottom: 16px;">
-                    <div class="metric-tile">
-                        <span class="metric-label"><span id="fc-symbol-name">BTC</span> Spot Price</span>
-                        <span class="metric-value" id="fc-current-price">$0.00</span>
-                        <span class="metric-sub" id="fc-spot-change">24h Move: 0.00%</span>
-                    </div>
-                    <div class="metric-tile">
-                        <span class="metric-label">T+1 Projected Target</span>
-                        <span class="metric-value" id="fc-next-day-target">$0.00</span>
-                        <span class="metric-sub" id="fc-next-day-delta" style="color: var(--accent-emerald);">Delta: +0.00%</span>
-                    </div>
-                    <div class="metric-tile">
-                        <span class="metric-label">Signal Recommendation</span>
-                        <span class="metric-value" id="fc-rec-signal" style="color: var(--accent-amber);">HOLD</span>
-                        <span class="metric-sub" id="fc-rec-score">Signal Score: 50/100</span>
-                    </div>
-                    <div class="metric-tile">
-                        <span class="metric-label">Model Accuracy (MAPE)</span>
-                        <span class="metric-value" id="fc-model-mape">0.00%</span>
-                        <span class="metric-sub">Engine: Random Forest Regressor</span>
-                    </div>
-                </div>
-
-                <!-- Forecast Chart + Signal Panel -->
-                <div class="grid-layout-main">
-                    <!-- Projection Chart -->
-                    <div class="card chart-card">
-                        <div class="card-header">
-                            <div>
-                                <h2 class="card-title">Interactive Price Projection</h2>
-                                <p class="card-subtitle">Spot historical candle sequence with recursive multi-step forecasting</p>
-                            </div>
-                            <span class="terminal-badge" id="fc-chart-badge">BTC / USD</span>
-                        </div>
-                        <div class="chart-container-wrap">
-                            <canvas id="priceChart"></canvas>
+                        <div class="chart-container-wrap chart-md">
+                            <canvas id="comparisonChart"></canvas>
                         </div>
                     </div>
 
-                    <!-- Horizon Cards & Signal Insight -->
-                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div class="grid-layout-main">
+                        <!-- Left: Comparative Matrix Table -->
                         <div class="card">
-                            <h2 class="card-title" style="margin-bottom: 12px;">Horizon Projections</h2>
-                            <div style="display: flex; flex-direction: column; gap: 10px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--bg-surface-inset); border-radius: var(--radius-md);">
-                                    <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-amber); font-weight: 700;">1 DAY</span>
-                                    <strong class="font-mono" id="fc-h-1d">$0.00</strong>
+                            <div class="card-header">
+                                <div>
+                                    <h2 class="card-title">Cross-Asset Comparative Matrix</h2>
+                                    <p class="card-subtitle">Current spot prices, volatility, and ML directional
+                                        conviction</p>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--bg-surface-inset); border-radius: var(--radius-md);">
-                                    <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-amber); font-weight: 700;">3 DAYS</span>
-                                    <strong class="font-mono" id="fc-h-3d">$0.00</strong>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--bg-surface-inset); border-radius: var(--radius-md);">
-                                    <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-amber); font-weight: 700;">5 DAYS</span>
-                                    <strong class="font-mono" id="fc-h-5d">$0.00</strong>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: var(--bg-surface-inset); border-radius: var(--radius-md);">
-                                    <span style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-amber); font-weight: 700;">7 DAYS</span>
-                                    <strong class="font-mono" id="fc-h-7d">$0.00</strong>
-                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Rank &bull; Asset</th>
+                                            <th style="text-align: right;">Current Spot</th>
+                                            <th style="text-align: right;">24h Net</th>
+                                            <th style="text-align: right;">Expected Move</th>
+                                            <th style="text-align: right;">Risk Score</th>
+                                            <th style="text-align: right;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="comparison-table-body">
+                                        <tr>
+                                            <td colspan="6" class="table-loading-cell">Loading market matrix...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
-                        <div class="card">
-                            <h2 class="card-title" style="margin-bottom: 8px;">Model Performance</h2>
-                            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
-                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding: 6px 0;">
-                                    <span>Algorithm</span>
-                                    <strong style="color: var(--text-primary);">RandomForestRegressor</strong>
+                        <!-- Right: Backtest Evaluation for Selected Asset -->
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <div>
+                                    <h2 class="card-title"><span id="comp-backtest-symbol">BTC</span> Historical
+                                        Backtest</h2>
+                                    <p class="card-subtitle">Actual price movement vs model backtest estimation</p>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding: 6px 0;">
-                                    <span>RMSE Error</span>
-                                    <strong style="color: var(--text-primary);" id="fc-rmse">-</strong>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding: 6px 0;">
-                                    <span>MAE Error</span>
-                                    <strong style="color: var(--text-primary);" id="fc-mae">-</strong>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding: 6px 0;">
-                                    <span>R² Score</span>
-                                    <strong style="color: var(--text-primary);" id="fc-r2">-</strong>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; padding: 6px 0;">
-                                    <span>Directional Accuracy</span>
-                                    <strong style="color: var(--accent-emerald);" id="fc-dir-acc">-</strong>
-                                </div>
+                                <span class="terminal-badge">150 EVAL CANDLES</span>
+                            </div>
+                            <div class="chart-container-wrap chart-md">
+                                <canvas id="backtestChart"></canvas>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- ================= VIEW 3: HISTORICAL TRENDS ================= -->
-            <section class="spa-view" id="view-historical">
-                <div class="card chart-card" style="margin-bottom: 16px;">
-                    <div class="card-header">
-                        <div>
-                            <h2 class="card-title"><span id="hist-symbol-title">BTC</span> Historical Price Action</h2>
-                            <p class="card-subtitle">Daily close price movements across verified OHLCV market feeds</p>
-                        </div>
-                        <div class="timeframe-bar">
-                            <button class="tf-btn" data-days="7">7D</button>
-                            <button class="tf-btn" data-days="30">30D</button>
-                            <button class="tf-btn active" data-days="90">90D</button>
-                            <button class="tf-btn" data-days="180">180D</button>
-                            <button class="tf-btn" data-days="365">1Y</button>
-                        </div>
-                    </div>
-                    <div class="chart-container-wrap" style="min-height: 440px;">
-                        <canvas id="historicalPriceChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Market Summary Statistics -->
-                <div class="grid-4">
-                    <div class="metric-tile">
-                        <span class="metric-label">Period High</span>
-                        <span class="metric-value font-mono" id="hist-high">$0.00</span>
-                    </div>
-                    <div class="metric-tile">
-                        <span class="metric-label">Period Low</span>
-                        <span class="metric-value font-mono" id="hist-low">$0.00</span>
-                    </div>
-                    <div class="metric-tile">
-                        <span class="metric-label">Data Points Sampled</span>
-                        <span class="metric-value font-mono" id="hist-data-points">0</span>
-                    </div>
-                    <div class="metric-tile">
-                        <span class="metric-label">Volatility Index</span>
-                        <span class="metric-value font-mono" id="hist-volatility">-</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================= VIEW 4: DECISION ENGINE ================= -->
-            <section class="spa-view" id="view-decision">
-                <div class="grid-layout-main">
-                    <!-- Left: Decision Details -->
-                    <div class="card">
-                        <div class="card-header">
+                <!-- ================= VIEW 4: HISTORICAL TRENDS ================= -->
+                <section class="spa-view" id="view-historical">
+                    <div class="card chart-card" style="margin-bottom: 20px;">
+                        <div class="card-header" style="flex-wrap: wrap; gap: 12px;">
                             <div>
-                                <h2 class="card-title">Algorithmic Trade Recommendation</h2>
-                                <p class="card-subtitle">Synthesizing machine learning forecast, momentum (RSI), volatility, and sentiment</p>
+                                <h2 class="card-title"><span id="hist-symbol-title">BTC</span> Historical Price Action
+                                </h2>
+                                <p class="card-subtitle">Spot closing quotes with trend indicators across verified OHLCV
+                                    feeds</p>
                             </div>
-                            <div id="decision-signal-badge" class="signal-badge signal-hold">HOLD</div>
-                        </div>
-
-                        <div style="margin: 20px 0;">
-                            <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);">
-                                <span>BEARISH (0)</span>
-                                <span>COMPOSITE SIGNAL SCORE: <strong id="decision-score-num" style="color: var(--text-primary);">50</strong>/100</span>
-                                <span>BULLISH (100)</span>
-                            </div>
-                            <div class="score-meter">
-                                <div class="score-fill" id="decision-score-bar" style="width: 50%;"></div>
+                            <div class="timeframe-bar" role="group" aria-label="Timeframe selection">
+                                <button class="tf-btn" data-days="7">7D</button>
+                                <button class="tf-btn" data-days="30">30D</button>
+                                <button class="tf-btn active" data-days="90">90D</button>
+                                <button class="tf-btn" data-days="180">180D</button>
+                                <button class="tf-btn" data-days="365">1Y</button>
                             </div>
                         </div>
+                        <div class="chart-container-wrap chart-lg">
+                            <canvas id="historicalPriceChart"></canvas>
+                        </div>
+                    </div>
 
-                        <div class="card" style="background: var(--bg-surface-inset); margin-bottom: 20px;">
-                            <h3 style="font-size: 14px; margin-bottom: 8px;">Decision Rationale</h3>
-                            <p id="decision-rationale-text" style="color: var(--text-secondary); line-height: 1.6; font-size: 13px;">
-                                Evaluating multi-factor market conditions...
+                    <!-- Market Summary Statistics -->
+                    <div class="grid-4">
+                        <div class="metric-card">
+                            <span class="metric-label">Period High</span>
+                            <div class="metric-val font-mono" id="hist-high">$0.00</div>
+                            <span class="metric-sub">Highest quote in range</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Period Low</span>
+                            <div class="metric-val font-mono" id="hist-low">$0.00</div>
+                            <span class="metric-sub">Lowest quote in range</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Data Points Sampled</span>
+                            <div class="metric-val font-mono" id="hist-data-points">0</div>
+                            <span class="metric-sub">Daily OHLCV intervals</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Volatility Index</span>
+                            <div class="metric-val font-mono" id="hist-volatility">-</div>
+                            <span class="metric-sub">High-to-low spread</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= VIEW 5: DECISION ENGINE ================= -->
+                <section class="spa-view" id="view-decision">
+                    <div class="grid-layout-main">
+                        <!-- Left: Decision Details -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h2 class="card-title">Algorithmic Trade Recommendation</h2>
+                                    <p class="card-subtitle">Synthesizing machine learning forecast, momentum (RSI),
+                                        volatility, and sentiment</p>
+                                </div>
+                                <div id="decision-signal-badge" class="signal-badge signal-hold">HOLD</div>
+                            </div>
+
+                            <div style="margin: 22px 0;">
+                                <div class="meter-labels font-mono">
+                                    <span>BEARISH (0)</span>
+                                    <span>COMPOSITE SIGNAL SCORE: <strong id="decision-score-num"
+                                            style="color: var(--text-primary);">50</strong>/100</span>
+                                    <span>BULLISH (100)</span>
+                                </div>
+                                <div class="score-meter">
+                                    <div class="score-fill" id="decision-score-bar" style="width: 50%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="rationale-box">
+                                <h3 class="rationale-title">Decision Rationale</h3>
+                                <p id="decision-rationale-text" class="rationale-text">
+                                    Evaluating multi-factor market conditions...
+                                </p>
+                            </div>
+
+                            <!-- Technical Matrix -->
+                            <h3
+                                style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 12px;">
+                                Component Factor Matrix</h3>
+                            <div class="grid-3">
+                                <div class="metric-card">
+                                    <span class="metric-label">RSI Momentum</span>
+                                    <div class="metric-val font-mono" id="decision-rsi">-</div>
+                                    <span class="metric-sub" id="decision-rsi-label">Neutral</span>
+                                </div>
+                                <div class="metric-card">
+                                    <span class="metric-label">Volatility Risk</span>
+                                    <div class="metric-val font-mono" id="decision-risk">Low</div>
+                                    <span class="metric-sub">Regime Status</span>
+                                </div>
+                                <div class="metric-card">
+                                    <span class="metric-label">News Sentiment</span>
+                                    <div class="metric-val font-mono" id="decision-sentiment">-</div>
+                                    <span class="metric-sub" id="decision-sentiment-score">Polarity: 0.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Horizon Path Chart -->
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <div>
+                                    <h2 class="card-title">Projected Trajectory Path</h2>
+                                    <p class="card-subtitle">Next 7 calendar days forecast sequence</p>
+                                </div>
+                                <span class="terminal-badge font-mono">T+1 &rarr; T+7</span>
+                            </div>
+                            <div class="chart-container-wrap chart-md">
+                                <canvas id="forecastChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= VIEW 6: NEWS & SENTIMENT ================= -->
+                <section class="spa-view" id="view-sentiment">
+                    <div class="grid-layout-main" style="margin-bottom: 20px;">
+                        <!-- Doughnut Chart & Sentiment Breakdown -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h2 class="card-title"><span id="sent-symbol-title">BTC</span> Sentiment Breakdown
+                                    </h2>
+                                    <p class="card-subtitle">VADER natural language polarity score on recent financial
+                                        coverage</p>
+                                </div>
+                            </div>
+                            <div class="sentiment-overview-split">
+                                <div class="sentiment-donut-wrap">
+                                    <canvas id="sentimentChart"></canvas>
+                                </div>
+                                <div class="sentiment-meta-col">
+                                    <div class="metric-card">
+                                        <span class="metric-label">Dominant Polarity</span>
+                                        <div class="metric-val" id="sent-mood-label">Neutral</div>
+                                        <span class="metric-sub font-mono" id="sent-compound-score">Compound:
+                                            0.0000</span>
+                                    </div>
+                                    <div class="metric-card">
+                                        <span class="metric-label">Market Impact Narrative</span>
+                                        <p id="sent-impact-text"
+                                            style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-top: 6px;">
+                                            Analyzing headlines and social signals...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sentiment Method Info -->
+                        <div class="card"
+                            style="display: flex; flex-direction: column; justify-content: center; gap: 14px;">
+                            <h3 style="font-size: 15px; color: var(--text-primary); font-weight: 600;">Algorithmic
+                                Sentiment Weighting</h3>
+                            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                                Our decision engine scores news coverage and market intelligence using the VADER
+                                sentiment analysis lexicon. Polarity is continuously computed to detect shifts in trader
+                                confidence prior to price volatility.
                             </p>
-                        </div>
-
-                        <!-- Technical Matrix -->
-                        <h3 style="font-size: 14px; margin-bottom: 12px;">Component Analysis Matrix</h3>
-                        <div class="grid-3">
-                            <div class="metric-tile">
-                                <span class="metric-label">RSI Momentum</span>
-                                <span class="metric-value font-mono" id="decision-rsi">-</span>
-                                <span class="metric-sub" id="decision-rsi-label">Neutral</span>
-                            </div>
-                            <div class="metric-tile">
-                                <span class="metric-label">Volatility Risk</span>
-                                <span class="metric-value font-mono" id="decision-risk">Low</span>
-                                <span class="metric-sub">Regime</span>
-                            </div>
-                            <div class="metric-tile">
-                                <span class="metric-label">News Sentiment</span>
-                                <span class="metric-value font-mono" id="decision-sentiment">-</span>
-                                <span class="metric-sub" id="decision-sentiment-score">Score: 0.00</span>
+                            <div class="callout-box">
+                                Continuous news stream ingestion ensures responsive sentiment tracking across verified
+                                digital asset outlets with offline caching protection.
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right: Horizon Chart -->
-                    <div class="card chart-card">
-                        <div class="card-header">
-                            <div>
-                                <h2 class="card-title">Projected Path</h2>
-                                <p class="card-subtitle">Next 7 calendar days</p>
-                            </div>
-                        </div>
-                        <div class="chart-container-wrap">
-                            <canvas id="forecastChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================= VIEW 5: MARKET COMPARISON ================= -->
-            <section class="spa-view" id="view-comparison">
-                <div class="card chart-card" style="margin-bottom: 16px;">
-                    <div class="card-header">
-                        <div>
-                            <h2 class="card-title">Forecast Ranking Matrix</h2>
-                            <p class="card-subtitle">Comparison of projected expected move % across all supported assets</p>
-                        </div>
-                    </div>
-                    <div class="chart-container-wrap" style="min-height: 320px;">
-                        <canvas id="comparisonChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Multi-Asset Comparative Data</h2>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Asset</th>
-                                    <th>Current Price</th>
-                                    <th>24h Change</th>
-                                    <th>Projected Move %</th>
-                                    <th>Risk Score</th>
-                                    <th style="text-align: right;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="comparison-table-body">
-                                <tr>
-                                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">Loading market matrix...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================= VIEW 6: NEWS & SENTIMENT ================= -->
-            <section class="spa-view" id="view-sentiment">
-                <div class="grid-layout-main" style="margin-bottom: 16px;">
-                    <!-- Doughnut Chart & Sentiment Indicator -->
+                    <!-- News Articles Grid -->
                     <div class="card">
                         <div class="card-header">
                             <div>
-                                <h2 class="card-title"><span id="sent-symbol-title">BTC</span> Sentiment Breakdown</h2>
-                                <p class="card-subtitle">VADER natural language polarity score on recent financial coverage</p>
+                                <h2 class="card-title">Verified News &amp; Intelligence Feed</h2>
+                                <p class="card-subtitle">Real-time headlines and automated polarity tags</p>
                             </div>
                         </div>
-                        <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
-                            <div style="width: 220px; height: 220px; position: relative;">
-                                <canvas id="sentimentChart"></canvas>
-                            </div>
-                            <div style="flex: 1; display: flex; flex-direction: column; gap: 12px;">
-                                <div class="metric-tile">
-                                    <span class="metric-label">Dominant Sentiment</span>
-                                    <span class="metric-value" id="sent-mood-label">Neutral</span>
-                                    <span class="metric-sub" id="sent-compound-score">Compound Polarity: 0.0000</span>
-                                </div>
-                                <div class="metric-tile">
-                                    <span class="metric-label">Market Impact Narrative</span>
-                                    <p id="sent-impact-text" style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-top: 4px;">
-                                        Analyzing headlines and social signals...
-                                    </p>
-                                </div>
-                            </div>
+                        <div class="news-grid" id="news-grid-container">
+                            <p style="color: var(--text-muted); padding: 24px;">Loading news coverage...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= VIEW 7: PORTFOLIO HOLDINGS VAULT ================= -->
+                <section class="spa-view" id="view-portfolio">
+                    <!-- Portfolio Stats Row -->
+                    <div class="grid-4" style="margin-bottom: 20px;">
+                        <div class="metric-card">
+                            <span class="metric-label">Portfolio Valuation</span>
+                            <div class="metric-val font-mono" id="port-total-val">$0.00</div>
+                            <span class="metric-sub" id="port-holdings-count">0 assets tracked</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Total Unrealized PnL</span>
+                            <div class="metric-val font-mono" id="port-total-pnl">$0.00</div>
+                            <span class="metric-sub font-mono" id="port-total-pnl-pct">0.00% net return</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Top Asset Allocation</span>
+                            <div class="metric-val font-mono" id="port-top-asset">-</div>
+                            <span class="metric-sub" id="port-top-asset-pct">-</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-label">Session Status</span>
+                            <div class="metric-val" id="port-auth-status"
+                                style="font-size: 15px; color: var(--accent-emerald);">Active Session</div>
+                            <span class="metric-sub" id="port-user-badge">Role: Trader</span>
                         </div>
                     </div>
 
-                    <!-- Market Sentiment Tip -->
-                    <div class="card" style="display: flex; flex-direction: column; justify-content: center; gap: 12px;">
-                        <h3 style="font-size: 15px; color: var(--text-primary);">Algorithmic Sentiment Weighting</h3>
-                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-                            Our decision engine weighs sentiment scores against technical volatility and Random Forest predictions. Strong bullish sentiment during an oversold RSI regime generates high-conviction BUY triggers.
-                        </p>
-                        <div style="padding: 10px 14px; background: var(--bg-surface-inset); border-radius: var(--radius-md); font-size: 12px; color: #a5b4fc;">
-                            System Notice: Curated institutional feeds ensure continuous market intelligence availability with local fallback protection.
+                    <!-- Guest Mode Callout (Shown when not authenticated) -->
+                    <div id="portfolio-guest-banner" class="guest-banner-card" style="display: none;">
+                        <div class="guest-banner-content">
+                            <div class="guest-banner-text">
+                                <h3 class="guest-banner-title">Authenticate to unlock your Private Holdings Vault</h3>
+                                <p class="guest-banner-desc">Sign in or create an account to record your cryptocurrency
+                                    transactions, calculate spot profit and loss, and manage your private portfolio.</p>
+                            </div>
+                            <button class="btn btn-primary" id="banner-login-btn">Sign In to Open Vault</button>
                         </div>
                     </div>
-                </div>
 
-                <!-- Articles Grid -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Verified News & Intelligence Feed</h2>
+                    <!-- Main Portfolio Split: Holdings Table + Add Transaction -->
+                    <div class="grid-layout-main">
+                        <!-- Holdings Table -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h2 class="card-title">Holdings Vault</h2>
+                                    <p class="card-subtitle">Real-time valuation synchronized with live spot market
+                                        feeds</p>
+                                </div>
+                                <button class="btn btn-secondary btn-sm" id="btn-refresh-portfolio">Refresh
+                                    Vault</button>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Asset</th>
+                                            <th style="text-align: right;">Quantity</th>
+                                            <th style="text-align: right;">Avg Buy Price</th>
+                                            <th style="text-align: right;">Spot Rate</th>
+                                            <th style="text-align: right;">Current Value</th>
+                                            <th style="text-align: right;">Unrealized PnL</th>
+                                            <th style="text-align: right;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="portfolio-table-body">
+                                        <tr>
+                                            <td colspan="7" class="table-loading-cell">Loading portfolio positions...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Add Holding Form -->
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <h2 class="card-title">Record Holding</h2>
+                                    <p class="card-subtitle">Add buy position to your personal vault</p>
+                                </div>
+                            </div>
+
+                            <form id="form-add-portfolio" class="form-standard">
+                                <div class="form-group">
+                                    <label class="form-label" for="add-port-symbol">Cryptocurrency</label>
+                                    <select class="form-select" id="add-port-symbol" required>
+                                        <option value="BTC">Bitcoin (BTC)</option>
+                                        <option value="ETH">Ethereum (ETH)</option>
+                                        <option value="SOL">Solana (SOL)</option>
+                                        <option value="BNB">Binance Coin (BNB)</option>
+                                        <option value="XRP">Ripple (XRP)</option>
+                                        <option value="ADA">Cardano (ADA)</option>
+                                        <option value="DOGE">Dogecoin (DOGE)</option>
+                                        <option value="AVAX">Avalanche (AVAX)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="add-port-quantity">Position Quantity</label>
+                                    <input type="number" step="any" min="0.00000001" class="form-input"
+                                        id="add-port-quantity" placeholder="0.5" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="add-port-buy-price">Average Buy Price (USD)</label>
+                                    <input type="number" step="any" min="0.000001" class="form-input"
+                                        id="add-port-buy-price" placeholder="65000" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="add-port-target-price">Target Sell Price
+                                        (Optional)</label>
+                                    <input type="number" step="any" class="form-input" id="add-port-target-price"
+                                        placeholder="80000" />
+                                </div>
+
+                                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 6px;">
+                                    + Record Transaction
+                                </button>
+                                <p id="port-form-status" class="form-status-msg"></p>
+                            </form>
+                        </div>
                     </div>
-                    <div class="news-grid" id="news-grid-container">
-                        <p style="color: var(--text-muted); padding: 20px;">Loading news coverage...</p>
-                    </div>
-                </div>
-            </section>
-        </main>
+                </section>
+            </main>
+        </div>
     </div>
 
-    <!-- ================= AUTHENTICATION MODAL ================= -->
-    <div class="modal-backdrop" id="auth-modal">
-        <div class="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <button class="modal-close-btn" id="modal-close-btn" aria-label="Close modal">&times;</button>
-            <h2 id="modal-title" style="font-family: var(--font-display); font-size: 20px; margin-bottom: 6px;">Trader Authentication</h2>
-            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 18px;">Access personalized portfolio analytics and secure session keys</p>
+    <!-- Backdrop for Mobile Sidebar Drawer -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 
-            <!-- Sign In / Sign Up Tab Switch -->
+    <!-- ================= AUTHENTICATION MODAL ================= -->
+    <div class="modal-backdrop" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="auth-modal-card">
+            <button class="modal-close-btn" id="modal-close-btn" aria-label="Close dialog">&times;</button>
+            <div class="modal-header">
+                <h2 id="modal-title" class="modal-title">Trader Authentication</h2>
+                <p class="modal-subtitle">Secure terminal access for personal portfolio tracking</p>
+            </div>
+
+            <!-- Tab Switcher -->
             <div class="auth-tab-switch">
                 <button class="auth-tab-btn active" id="auth-tab-login">Sign In</button>
                 <button class="auth-tab-btn" id="auth-tab-signup">Create Account</button>
             </div>
 
             <!-- Login Form -->
-            <form id="auth-form-login">
+            <form id="auth-form-login" class="form-standard">
                 <div class="form-group">
                     <label class="form-label" for="login-username">Username</label>
-                    <input type="text" class="form-input" id="login-username" placeholder="trader" required autocomplete="username" />
+                    <input type="text" class="form-input" id="login-username" placeholder="trader" required
+                        autocomplete="username" />
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="login-password">Password</label>
-                    <input type="password" class="form-input" id="login-password" placeholder="••••••••" required autocomplete="current-password" />
+                    <input type="password" class="form-input" id="login-password" placeholder="••••••••" required
+                        autocomplete="current-password" />
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 6px;">Sign In to Terminal</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">Sign In to
+                    Terminal</button>
             </form>
 
             <!-- Signup Form -->
-            <form id="auth-form-signup" style="display: none;">
+            <form id="auth-form-signup" class="form-standard" style="display: none;">
                 <div class="form-group">
                     <label class="form-label" for="signup-username">Username</label>
-                    <input type="text" class="form-input" id="signup-username" placeholder="newtrader" required autocomplete="username" />
+                    <input type="text" class="form-input" id="signup-username" placeholder="newtrader" required
+                        autocomplete="username" />
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="signup-email">Email Address</label>
-                    <input type="email" class="form-input" id="signup-email" placeholder="trader@example.com" required autocomplete="email" />
+                    <input type="email" class="form-input" id="signup-email" placeholder="trader@example.com" required
+                        autocomplete="email" />
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="signup-password">Password (min 6 chars)</label>
-                    <input type="password" class="form-input" id="signup-password" placeholder="••••••••" minlength="6" required autocomplete="new-password" />
+                    <input type="password" class="form-input" id="signup-password" placeholder="••••••••" minlength="6"
+                        required autocomplete="new-password" />
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 6px;">Create Account</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">Create
+                    Account</button>
             </form>
 
             <div style="margin-top: 14px; text-align: center;">
-                <p id="modal-feedback-msg" style="font-size: 12px; color: var(--text-muted); min-height: 18px;"></p>
+                <p id="modal-feedback-msg" class="modal-feedback"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= SETTINGS MODAL ================= -->
+    <div class="modal-backdrop" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <div class="auth-modal-card" style="max-width: 480px;">
+            <button class="modal-close-btn" id="btn-close-settings" aria-label="Close settings">&times;</button>
+            <div class="modal-header">
+                <h2 id="settings-title" class="modal-title">Terminal Configuration</h2>
+                <p class="modal-subtitle">Runtime engine parameters and local storage preferences</p>
+            </div>
+
+            <div class="settings-content">
+                <div class="settings-item">
+                    <div class="settings-meta">
+                        <span class="settings-label">Display Currency</span>
+                        <span class="settings-desc">Global fiat pricing across tables and charts</span>
+                    </div>
+                    <div class="currency-selector" aria-label="Modal Currency">
+                        <button class="currency-btn active modal-currency-btn" data-currency="USD">USD</button>
+                        <button class="currency-btn modal-currency-btn" data-currency="EUR">EUR</button>
+                        <button class="currency-btn modal-currency-btn" data-currency="INR">INR</button>
+                    </div>
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-meta">
+                        <span class="settings-label">Live WebSocket Stream</span>
+                        <span class="settings-desc">Protocol at /ws/prices</span>
+                    </div>
+                    <span class="status-pill status-pill-active" id="settings-ws-status">CONNECTED</span>
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-meta">
+                        <span class="settings-label">Machine Learning Engine</span>
+                        <span class="settings-desc">FastAPI Random Forest &amp; XGBoost ensemble</span>
+                    </div>
+                    <span class="status-pill">ONLINE</span>
+                </div>
+
+                <div class="settings-item">
+                    <div class="settings-meta">
+                        <span class="settings-label">Client Cache</span>
+                        <span class="settings-desc">In-memory and sessionStorage cached quotes</span>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="btn-clear-cache">Purge Cache</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; text-align: right;">
+                <button class="btn btn-primary btn-sm" id="btn-done-settings">Done</button>
             </div>
         </div>
     </div>
@@ -598,7 +1134,8 @@
     <!-- Floating Toast Notification System -->
     <div class="toast-container" id="toast-container"></div>
 
-    <!-- Main Application Script -->
+    <!-- Main Application Module -->
     <script type="module" src="/assets/js/dashboard.js"></script>
 </body>
+
 </html>

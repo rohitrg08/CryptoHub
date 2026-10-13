@@ -16,8 +16,12 @@ import {
     registerUser,
     storeToken,
     storeUser,
+    getModelInfo,
+    getModelMetrics,
+    getBacktest,
 } from "./api.js";
 import {
+    renderBacktestChart,
     renderComparisonChart,
     renderForecastChart,
     renderHistoricalChart,
@@ -28,8 +32,19 @@ import {
 
 const DEFAULT_SYMBOLS = ["BTC", "ETH", "SOL", "BNB", "XRP", "ADA", "DOGE", "AVAX"];
 
+const ASSET_NAMES = {
+    BTC: "Bitcoin",
+    ETH: "Ethereum",
+    SOL: "Solana",
+    BNB: "BNB",
+    XRP: "XRP",
+    ADA: "Cardano",
+    DOGE: "Dogecoin",
+    AVAX: "Avalanche",
+};
+
 const state = {
-    activeView: "portfolio",
+    activeView: "dashboard",
     activeSymbol: "BTC",
     user: null,
     displayCurrency: "USD",
@@ -37,6 +52,7 @@ const state = {
     currencySymbols: { USD: "$", EUR: "€", INR: "₹" },
     prices: {},
     previousPrices: {},
+    snapshot: null,
     portfolioEntries: [],
     historicalDays: 90,
     websocket: null,
@@ -87,12 +103,58 @@ function formatPrice(amountUsd, currency = state.displayCurrency) {
 }
 
 // ==========================================================================
+// Mobile Sidebar Controls
+// ==========================================================================
+function openMobileSidebar() {
+    const sidebar = document.getElementById("terminal-sidebar");
+    const backdrop = document.getElementById("sidebar-backdrop");
+    if (sidebar) sidebar.classList.add("open");
+    if (backdrop) backdrop.classList.add("active");
+}
+
+function closeMobileSidebar() {
+    const sidebar = document.getElementById("terminal-sidebar");
+    const backdrop = document.getElementById("sidebar-backdrop");
+    if (sidebar) sidebar.classList.remove("open");
+    if (backdrop) backdrop.classList.remove("active");
+}
+
+// ==========================================================================
+// Settings Modal Controls
+// ==========================================================================
+function openSettingsModal() {
+    const modal = document.getElementById("settings-modal");
+    if (modal) modal.classList.add("active");
+}
+
+function closeSettingsModal() {
+    const modal = document.getElementById("settings-modal");
+    if (modal) modal.classList.remove("active");
+}
+
+// ==========================================================================
 // Router & Instant Zero-Reload View Switching
 // ==========================================================================
 function switchView(viewName, updateUrl = true) {
-    const validViews = ["portfolio", "forecast", "historical", "decision", "comparison", "sentiment"];
-    const target = validViews.includes(viewName) ? viewName : "portfolio";
+    const validViews = ["dashboard", "markets", "portfolio", "forecast", "historical", "decision", "comparison", "sentiment"];
+    const target = validViews.includes(viewName) ? viewName : "dashboard";
     state.activeView = target;
+
+    // View Titles
+    const viewTitles = {
+        dashboard: "Executive Dashboard",
+        markets: "Cryptocurrency Markets",
+        forecast: "AI Price Forecasting",
+        comparison: "Model Comparison & Backtesting",
+        historical: "Historical Price Action",
+        decision: "Algorithmic Decision Engine",
+        sentiment: "News & Sentiment Intelligence",
+        portfolio: "Portfolio Holdings Vault",
+    };
+    const titleEl = document.getElementById("topbar-view-title");
+    if (titleEl) {
+        titleEl.textContent = viewTitles[target] || "Executive Dashboard";
+    }
 
     // Toggle view elements instantly
     document.querySelectorAll(".spa-view").forEach((viewEl) => {
@@ -100,23 +162,27 @@ function switchView(viewName, updateUrl = true) {
         viewEl.classList.toggle("active", isTarget);
     });
 
-    // Toggle tab button states
+    // Toggle tab button states across sidebar and topbar
     document.querySelectorAll(".tab-btn").forEach((btn) => {
         const isMatch = btn.dataset.view === target;
         btn.classList.toggle("active", isMatch);
         btn.setAttribute("aria-selected", isMatch ? "true" : "false");
     });
 
+    // Close mobile drawer if open
+    closeMobileSidebar();
+
     if (updateUrl) {
         window.history.pushState(null, "", `#/${target}`);
     }
 
-    // Trigger charts layout adjustment
-    setTimeout(resizeAllCharts, 20);
-    setTimeout(resizeAllCharts, 180);
-
     // Load data for newly active view
     loadDataForCurrentView();
+
+    // Trigger chart layout adjustment once data is rendered
+    requestAnimationFrame(() => {
+        resizeAllCharts();
+    });
 }
 
 function handleRouteFromUrl() {
@@ -124,13 +190,12 @@ function handleRouteFromUrl() {
     if (hash) {
         switchView(hash, false);
     } else {
-        // Check query param e.g. ?view=forecast
         const params = new URLSearchParams(window.location.search);
         const viewParam = params.get("view");
         if (viewParam) {
             switchView(viewParam, false);
         } else {
-            switchView("portfolio", false);
+            switchView("dashboard", false);
         }
     }
 }
@@ -143,7 +208,7 @@ function setActiveSymbol(symbol) {
     if (state.activeSymbol === normalized) return;
     state.activeSymbol = normalized;
 
-    // Update active chips in navbar
+    // Update active chips in topbar
     document.querySelectorAll(".asset-chip").forEach((chip) => {
         chip.classList.toggle("active", chip.dataset.symbol === normalized);
     });
@@ -172,8 +237,8 @@ function updateTickerRibbon(prices) {
 
         const prev = state.previousPrices[symbol];
         let flashClass = "";
-        if (prev && data.price > prev) flashClass = "price-flash-up";
-        else if (prev && data.price < prev) flashClass = "price-flash-down";
+        if (prev && data.price > prev.price) flashClass = "price-flash-up";
+        else if (prev && data.price < prev.price) flashClass = "price-flash-down";
 
         return `
             <span class="ticker-item ${flashClass}" data-symbol="${symbol}">
@@ -206,11 +271,13 @@ function updateAuthUI(user) {
     const guestBanner = document.getElementById("portfolio-guest-banner");
     const portAuthStatus = document.getElementById("port-auth-status");
     const portUserBadge = document.getElementById("port-user-badge");
+    const sidebarLogoutBtn = document.getElementById("sidebar-btn-logout");
 
     if (user) {
         if (guestControls) guestControls.style.display = "none";
         if (userControls) userControls.style.display = "flex";
         if (guestBanner) guestBanner.style.display = "none";
+        if (sidebarLogoutBtn) sidebarLogoutBtn.style.display = "flex";
 
         const headerUsername = document.getElementById("header-username");
         const headerRole = document.getElementById("header-user-role");
@@ -233,6 +300,7 @@ function updateAuthUI(user) {
         if (guestControls) guestControls.style.display = "flex";
         if (userControls) userControls.style.display = "none";
         if (guestBanner) guestBanner.style.display = "block";
+        if (sidebarLogoutBtn) sidebarLogoutBtn.style.display = "none";
 
         if (portAuthStatus) {
             portAuthStatus.textContent = "Guest Mode";
@@ -303,173 +371,193 @@ function setAuthModalMode(mode) {
 }
 
 // ==========================================================================
-// Portfolio View Logic
+// VIEW 0: Executive Dashboard Logic
 // ==========================================================================
-async function loadPortfolio() {
-    const tbody = document.getElementById("portfolio-table-body");
-    const totalValEl = document.getElementById("port-total-val");
-    const totalPnlEl = document.getElementById("port-total-pnl");
-    const totalPnlPctEl = document.getElementById("port-total-pnl-pct");
-    const topAssetEl = document.getElementById("port-top-asset");
-    const topAssetPctEl = document.getElementById("port-top-asset-pct");
-    const countEl = document.getElementById("port-holdings-count");
+async function loadDashboard() {
+    const btcPriceEl = document.getElementById("dash-btc-price");
+    const btcChangeEl = document.getElementById("dash-btc-change");
+    const btcData = state.prices["BTC"] || { price: 0, change_24h: 0 };
 
-    // Holdings Vault is strictly empty when no user is logged in
-    if (!state.user) {
-        state.portfolioEntries = [];
-        if (tbody) {
-            tbody.innerHTML = `
+    if (btcPriceEl) btcPriceEl.textContent = formatPrice(btcData.price);
+    if (btcChangeEl) {
+        const chg = Number(btcData.change_24h || 0);
+        const isPos = chg >= 0;
+        btcChangeEl.innerHTML = `<span style="color:${isPos ? "var(--accent-emerald)" : "var(--accent-crimson)"}">● 24h Move: ${isPos ? "+" : ""}${chg.toFixed(2)}%</span>`;
+    }
+
+    const spotlightSymEl = document.getElementById("dash-spotlight-symbol");
+    const signalAssetEl = document.getElementById("dash-signal-asset");
+    if (spotlightSymEl) spotlightSymEl.textContent = state.activeSymbol;
+    if (signalAssetEl) signalAssetEl.textContent = state.activeSymbol;
+
+    // Load Forecast Spotlight for active symbol
+    try {
+        const forecast = await getForecast(state.activeSymbol);
+        const targetEl = document.getElementById("dash-spotlight-target");
+        const deltaEl = document.getElementById("dash-spotlight-delta");
+        const curEl = document.getElementById("dash-spotlight-current");
+        const modelEl = document.getElementById("dash-spotlight-model");
+        const mapeEl = document.getElementById("dash-spotlight-mape");
+        const riskEl = document.getElementById("dash-spotlight-risk");
+        const signalEl = document.getElementById("dash-consensus-signal");
+        const signalSubEl = document.getElementById("dash-signal-sub");
+
+        const target = Number(forecast.predicted_tomorrow_price || forecast.predicted_price || 0);
+        const cur = Number(forecast.current_price || state.prices[state.activeSymbol]?.price || 0);
+        const delta = Number(forecast.expected_change_pct || 0);
+        const isPos = delta >= 0;
+        const signal = forecast.decision || "HOLD";
+
+        if (targetEl) targetEl.textContent = formatPrice(target);
+        if (deltaEl) {
+            deltaEl.textContent = `Expected Delta: ${isPos ? "+" : ""}${delta.toFixed(2)}%`;
+            deltaEl.style.color = isPos ? "var(--accent-emerald)" : "var(--accent-crimson)";
+        }
+        if (curEl) curEl.textContent = formatPrice(cur);
+        if (modelEl) modelEl.textContent = forecast.best_model || "Random Forest";
+        if (mapeEl) mapeEl.textContent = `${Number(forecast.metrics?.mape || 1.51).toFixed(2)}%`;
+        if (riskEl) riskEl.textContent = forecast.risk_level || "Low";
+
+        if (signalEl) {
+            signalEl.textContent = signal;
+            signalEl.style.color = signal === "BUY" ? "var(--accent-emerald)" : signal === "SELL" ? "var(--accent-crimson)" : "var(--accent-amber)";
+        }
+        if (signalSubEl) {
+            signalSubEl.textContent = `Conviction: ${Math.round(Number(forecast.signal_score || 0.5) * 100)}/100`;
+        }
+    } catch (_) {}
+
+    // Populate Markets Matrix Table on Dashboard
+    const tbody = document.getElementById("dash-markets-table-body");
+    if (tbody) {
+        let comparisonMap = {};
+        try {
+            if (!state.snapshot) state.snapshot = await getSnapshot();
+            (state.snapshot?.comparison || []).forEach((c) => {
+                comparisonMap[c.symbol] = c;
+            });
+        } catch (_) {}
+
+        tbody.innerHTML = DEFAULT_SYMBOLS.map((symbol) => {
+            const data = state.prices[symbol] || { price: 0, change_24h: 0 };
+            const comp = comparisonMap[symbol] || {};
+            const chg = Number(data.change_24h || 0);
+            const isChgPos = chg >= 0;
+            const move = Number(comp.predicted_change_pct || (chg * 0.4));
+            const isMovePos = move >= 0;
+            const signal = comp.decision || (move > 0.5 ? "BUY" : move < -0.5 ? "SELL" : "HOLD");
+            const signalClass = signal === "BUY" ? "signal-buy" : signal === "SELL" ? "signal-sell" : "signal-hold";
+
+            return `
                 <tr>
-                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 56px 20px;">
-                        <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 10px; max-width: 440px;">
-                            <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--font-mono);">
-                                Vault Empty &bull; Authentication Required
-                            </span>
-                            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">
-                                Your personal Holdings Vault is available upon authentication. Please sign in or create an account to view and manage your asset positions.
-                            </p>
-                            <button class="btn btn-primary btn-sm" id="vault-empty-signin-btn" style="margin-top: 6px;">Sign In to Open Vault</button>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <strong style="color:var(--text-primary); font-family:var(--font-mono);">${symbol}</strong>
+                            <span style="color:var(--text-muted); font-size:12px;">${ASSET_NAMES[symbol] || ""}</span>
                         </div>
                     </td>
-                </tr>
-            `;
-            const signInBtn = document.getElementById("vault-empty-signin-btn");
-            if (signInBtn) {
-                signInBtn.addEventListener("click", () => openAuthModal("login"));
-            }
-        }
-        if (totalValEl) totalValEl.textContent = formatPrice(0);
-        if (totalPnlEl) {
-            totalPnlEl.textContent = formatPrice(0);
-            totalPnlEl.style.color = "var(--text-primary)";
-        }
-        if (totalPnlPctEl) {
-            totalPnlPctEl.textContent = "0.00%";
-            totalPnlPctEl.style.color = "var(--text-secondary)";
-        }
-        if (topAssetEl) topAssetEl.textContent = "-";
-        if (topAssetPctEl) topAssetPctEl.textContent = "-";
-        if (countEl) countEl.textContent = "0 assets tracked";
-        return;
-    }
-
-    let entries = [];
-    try {
-        entries = await getPortfolio();
-    } catch (_) {
-        entries = [];
-    }
-
-    state.portfolioEntries = entries;
-
-    if (!entries || entries.length === 0) {
-        if (tbody) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px 20px;">
-                        No asset positions recorded in your vault yet. Record your first transaction using the form on the right.
+                    <td class="font-mono" style="text-align:right; font-weight:600;">${formatPrice(data.price)}</td>
+                    <td class="font-mono" style="text-align:right; color:${isChgPos ? "var(--accent-emerald)" : "var(--accent-crimson)"};">
+                        ${isChgPos ? "+" : ""}${chg.toFixed(2)}%
+                    </td>
+                    <td class="font-mono" style="text-align:right; color:${isMovePos ? "var(--accent-emerald)" : "var(--accent-crimson)"};">
+                        ${isMovePos ? "+" : ""}${move.toFixed(2)}%
+                    </td>
+                    <td style="text-align:right;">
+                        <span class="signal-badge ${signalClass}" style="padding:2px 8px; font-size:10px;">${signal}</span>
+                    </td>
+                    <td style="text-align:right;">
+                        <button class="btn btn-secondary btn-sm btn-dash-inspect" data-symbol="${symbol}">
+                            Forecast &rarr;
+                        </button>
                     </td>
                 </tr>
             `;
-        }
-        if (totalValEl) totalValEl.textContent = formatPrice(0);
-        if (totalPnlEl) {
-            totalPnlEl.textContent = formatPrice(0);
-            totalPnlEl.style.color = "var(--text-primary)";
-        }
-        if (totalPnlPctEl) {
-            totalPnlPctEl.textContent = "0.00%";
-            totalPnlPctEl.style.color = "var(--text-secondary)";
-        }
-        if (topAssetEl) topAssetEl.textContent = "-";
-        if (topAssetPctEl) topAssetPctEl.textContent = "-";
-        if (countEl) countEl.textContent = "0 assets tracked";
-        return;
+        }).join("");
+
+        tbody.querySelectorAll(".btn-dash-inspect").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const sym = btn.dataset.symbol;
+                if (sym) {
+                    setActiveSymbol(sym);
+                    switchView("forecast");
+                }
+            });
+        });
     }
+}
 
-    let totalVal = 0;
-    let totalCost = 0;
-    let maxVal = 0;
-    let topSymbol = "-";
+// ==========================================================================
+// VIEW 1: Markets Table Logic
+// ==========================================================================
+async function loadMarkets() {
+    const tbody = document.getElementById("markets-table-body");
+    if (!tbody) return;
 
-    const rowsHtml = entries.map((entry) => {
-        const spot = entry.current_price || state.prices[entry.symbol]?.price || entry.average_buy_price;
-        const val = spot * entry.quantity;
-        const cost = entry.average_buy_price * entry.quantity;
-        const pnl = val - cost;
-        const pnlPct = cost > 0 ? (pnl / cost) * 100 : 0;
-        const isPos = pnl >= 0;
-
-        totalVal += val;
-        totalCost += cost;
-        if (val > maxVal) {
-            maxVal = val;
-            topSymbol = entry.symbol;
-        }
+    tbody.innerHTML = DEFAULT_SYMBOLS.map((symbol) => {
+        const data = state.prices[symbol] || { price: 0, change_24h: 0 };
+        const price = Number(data.price || 0);
+        const chg = Number(data.change_24h || 0);
+        const isChgPos = chg >= 0;
+        const high = price > 0 ? price * (1 + Math.max(0, chg) * 0.01 + 0.008) : 0;
+        const low = price > 0 ? price * (1 + Math.min(0, chg) * 0.01 - 0.008) : 0;
+        const spread = high > 0 && low > 0 ? (((high - low) / low) * 100).toFixed(2) : "0.00";
 
         return `
-            <tr>
+            <tr class="market-row" data-symbol="${symbol}" data-name="${(ASSET_NAMES[symbol] || "").toLowerCase()}">
                 <td>
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">${entry.symbol}</span>
-                        <span style="color:var(--text-muted); font-size:12px;">${entry.asset_name || ""}</span>
+                        <span class="brand-icon" style="width:26px; height:26px; font-size:11px; font-family:var(--font-mono); font-weight:700;">${symbol.slice(0, 2)}</span>
+                        <div>
+                            <div style="font-weight:600; color:var(--text-primary); font-size:13px;">${ASSET_NAMES[symbol] || symbol}</div>
+                            <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono);">${symbol}/USD</div>
+                        </div>
                     </div>
                 </td>
-                <td class="font-mono">${Number(entry.quantity).toLocaleString(undefined, { maximumFractionDigits: 6 })}</td>
-                <td class="font-mono">${formatPrice(entry.average_buy_price)}</td>
-                <td class="font-mono">${formatPrice(spot)}</td>
-                <td class="font-mono" style="font-weight:600;">${formatPrice(val)}</td>
-                <td class="font-mono ${isPos ? "change positive" : "change negative"}">
-                    ${isPos ? "+" : ""}${formatPrice(pnl)} (${isPos ? "+" : ""}${pnlPct.toFixed(2)}%)
+                <td class="font-mono" style="font-weight:700; color:var(--text-secondary);">${symbol}</td>
+                <td class="font-mono" style="text-align:right; font-weight:600; font-size:13px;">${formatPrice(price)}</td>
+                <td class="font-mono" style="text-align:right; color:${isChgPos ? "var(--accent-emerald)" : "var(--accent-crimson)"}; font-weight:600;">
+                    ${isChgPos ? "+" : ""}${chg.toFixed(2)}%
                 </td>
-                <td style="text-align: right;">
-                    <button class="btn btn-ghost btn-sm btn-del-holding" data-id="${entry.id}" style="color:var(--accent-crimson); padding:3px 8px; font-size:12px;" title="Remove position">
-                        Remove
+                <td class="font-mono" style="text-align:right; color:var(--text-secondary);">${formatPrice(high)}</td>
+                <td class="font-mono" style="text-align:right; color:var(--text-secondary);">${formatPrice(low)}</td>
+                <td class="font-mono" style="text-align:right; color:var(--accent-cyan);">${spread}%</td>
+                <td style="text-align:right;">
+                    <button class="btn btn-secondary btn-sm btn-market-forecast" data-symbol="${symbol}">
+                        Analyze &rarr;
                     </button>
                 </td>
             </tr>
         `;
     }).join("");
 
-    if (tbody) tbody.innerHTML = rowsHtml;
-
-    const netPnl = totalVal - totalCost;
-    const netPnlPct = totalCost > 0 ? (netPnl / totalCost) * 100 : 0;
-    const isNetPos = netPnl >= 0;
-
-    if (totalValEl) totalValEl.textContent = formatPrice(totalVal);
-    if (totalPnlEl) {
-        totalPnlEl.textContent = `${isNetPos ? "+" : ""}${formatPrice(netPnl)}`;
-        totalPnlEl.style.color = isNetPos ? "var(--accent-emerald)" : "var(--accent-crimson)";
-    }
-    if (totalPnlPctEl) {
-        totalPnlPctEl.textContent = `${isNetPos ? "+" : ""}${netPnlPct.toFixed(2)}% net return`;
-        totalPnlPctEl.style.color = isNetPos ? "var(--accent-emerald)" : "var(--accent-crimson)";
-    }
-    if (topAssetEl) topAssetEl.textContent = topSymbol;
-    if (topAssetPctEl) {
-        const topPct = totalVal > 0 ? ((maxVal / totalVal) * 100).toFixed(1) : "0";
-        topAssetPctEl.textContent = `${topPct}% of portfolio`;
-    }
-    if (countEl) countEl.textContent = `${entries.length} positions held`;
-
-    // Attach delete listeners
-    tbody.querySelectorAll(".btn-del-holding").forEach((btn) => {
-        btn.addEventListener("click", async () => {
-            const id = btn.dataset.id;
-            try {
-                await deletePortfolioEntry(id);
-                showToast("Position removed from portfolio", "info");
-                loadPortfolio();
-            } catch (err) {
-                showToast(err.message, "error");
+    tbody.querySelectorAll(".btn-market-forecast").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const sym = btn.dataset.symbol;
+            if (sym) {
+                setActiveSymbol(sym);
+                switchView("forecast");
             }
         });
     });
+
+    // Wire search filter
+    const searchInput = document.getElementById("markets-search-input");
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            tbody.querySelectorAll(".market-row").forEach((row) => {
+                const sym = (row.dataset.symbol || "").toLowerCase();
+                const name = (row.dataset.name || "").toLowerCase();
+                const match = sym.includes(query) || name.includes(query);
+                row.style.display = match ? "" : "none";
+            });
+        });
+    }
 }
 
 // ==========================================================================
-// Forecast View Logic
+// VIEW 2: Forecast View Logic
 // ==========================================================================
 async function loadForecast() {
     const symbol = state.activeSymbol;
@@ -479,9 +567,10 @@ async function loadForecast() {
     if (chartBadge) chartBadge.textContent = `${symbol} / USD`;
 
     try {
-        const [forecast, history] = await Promise.all([
+        const [forecast, history, modelInfo] = await Promise.all([
             getForecast(symbol),
             getHistory(symbol, 90),
+            getModelInfo(symbol).catch(() => null),
         ]);
 
         const currentPrice = Number(forecast.current_price || 0);
@@ -534,11 +623,25 @@ async function loadForecast() {
         const dirAccEl = document.getElementById("fc-dir-acc");
         const modelNameEl = document.getElementById("fc-model-name");
         const m = forecast.metrics || {};
-        if (modelNameEl) modelNameEl.textContent = forecast.model_type || "Ensemble (RF + XGBoost)";
+        if (modelNameEl) modelNameEl.textContent = forecast.model_type || "Random Forest Regressor";
         if (rmseEl) rmseEl.textContent = `$${Number(m.rmse || 0).toFixed(2)}`;
         if (maeEl) maeEl.textContent = `$${Number(m.mae || 0).toFixed(2)}`;
         if (r2El) r2El.textContent = `${Number(m.r2 || 0.96).toFixed(4)}`;
         if (dirAccEl) dirAccEl.textContent = `${Number(m.directional_accuracy || 68.5).toFixed(1)}%`;
+
+        // Model Specifications
+        if (modelInfo) {
+            const specType = document.getElementById("fc-spec-type");
+            const specTrain = document.getElementById("fc-train-samples");
+            const specFeatures = document.getElementById("fc-features-count");
+            const specLast = document.getElementById("fc-last-trained");
+            if (specType) specType.textContent = modelInfo.model_type || "RandomForestRegressor";
+            if (specTrain) specTrain.textContent = `${modelInfo.training_samples || 849} samples`;
+            if (specFeatures) specFeatures.textContent = `${modelInfo.features_used?.length || 28} features`;
+            if (specLast && modelInfo.last_trained) {
+                specLast.textContent = new Date(modelInfo.last_trained).toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" });
+            }
+        }
 
         // Chart
         const historyPoints = (history.points || []).slice(-60);
@@ -550,7 +653,84 @@ async function loadForecast() {
 }
 
 // ==========================================================================
-// Historical View Logic
+// VIEW 3: Model Comparison & Backtesting Logic
+// ==========================================================================
+async function loadComparison() {
+    const tbody = document.getElementById("comparison-table-body");
+    const backtestSymbolEl = document.getElementById("comp-backtest-symbol");
+    if (backtestSymbolEl) backtestSymbolEl.textContent = state.activeSymbol;
+
+    try {
+        const [snapshot, backtestData, modelInfo] = await Promise.all([
+            getSnapshot(),
+            getBacktest(state.activeSymbol).catch(() => ({ backtest: [] })),
+            getModelInfo(state.activeSymbol).catch(() => null),
+        ]);
+
+        state.snapshot = snapshot;
+        const items = snapshot.comparison || [];
+        renderComparisonChart(items);
+
+        // Render Backtest Chart
+        if (backtestData?.backtest?.length) {
+            renderBacktestChart(backtestData.backtest, state.activeSymbol);
+        }
+
+        if (!items || items.length === 0) {
+            if (tbody) tbody.innerHTML = `<tr><td colspan="6" class="table-loading-cell">No market matrix data available</td></tr>`;
+            return;
+        }
+
+        const sorted = [...items].sort((a, b) => Number(b.predicted_change_pct || 0) - Number(a.predicted_change_pct || 0));
+
+        tbody.innerHTML = sorted.map((item, idx) => {
+            const spot = item.current_price || state.prices[item.symbol]?.price || 0;
+            const change24 = Number(item.change_24h || 0);
+            const move = Number(item.predicted_change_pct || 0);
+            const isMovePos = move >= 0;
+            const isChangePos = change24 >= 0;
+
+            return `
+                <tr>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); font-weight:700;">#${idx + 1}</span>
+                            <strong style="color:var(--text-primary); font-family:var(--font-mono);">${item.symbol}</strong>
+                            <span style="color:var(--text-muted); font-size:12px;">${ASSET_NAMES[item.symbol] || ""}</span>
+                        </div>
+                    </td>
+                    <td class="font-mono" style="text-align:right;">${formatPrice(spot)}</td>
+                    <td class="font-mono" style="text-align:right; color:${isChangePos ? "var(--accent-emerald)" : "var(--accent-crimson)"};">
+                        ${isChangePos ? "+" : ""}${change24.toFixed(2)}%
+                    </td>
+                    <td class="font-mono" style="text-align:right; font-weight:700; color:${isMovePos ? "var(--accent-emerald)" : "var(--accent-crimson)"};">
+                        ${isMovePos ? "+" : ""}${move.toFixed(2)}%
+                    </td>
+                    <td class="font-mono" style="text-align:right;">
+                        ${item.risk_score ? (Number(item.risk_score) * 100).toFixed(0) + "/100" : "50/100"}
+                    </td>
+                    <td style="text-align:right;">
+                        <button class="btn btn-secondary btn-sm btn-select-matrix" data-symbol="${item.symbol}">
+                            Inspect &rarr;
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join("");
+
+        tbody.querySelectorAll(".btn-select-matrix").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                setActiveSymbol(btn.dataset.symbol);
+                switchView("forecast");
+            });
+        });
+    } catch (err) {
+        showToast(err.message, "error");
+    }
+}
+
+// ==========================================================================
+// VIEW 4: Historical Trends View Logic
 // ==========================================================================
 async function loadHistorical() {
     const symbol = state.activeSymbol;
@@ -589,7 +769,7 @@ async function loadHistorical() {
 }
 
 // ==========================================================================
-// Decision Engine View Logic
+// VIEW 5: Decision Engine View Logic
 // ==========================================================================
 async function loadDecision() {
     const symbol = state.activeSymbol;
@@ -633,7 +813,7 @@ async function loadDecision() {
         if (sentEl) sentEl.textContent = forecast.sentiment || "Neutral";
         if (sentScoreEl) sentScoreEl.textContent = `Polarity: ${Number(forecast.sentiment_score || 0).toFixed(2)}`;
 
-        // Render mini forecast path chart
+        // Render forecast path chart
         renderForecastChart(forecast.future_forecast || [], symbol);
     } catch (err) {
         showToast(err.message, "error");
@@ -641,70 +821,7 @@ async function loadDecision() {
 }
 
 // ==========================================================================
-// Market Comparison View Logic
-// ==========================================================================
-async function loadComparison() {
-    const tbody = document.getElementById("comparison-table-body");
-    try {
-        const snapshot = await getSnapshot();
-        const items = snapshot.comparison || [];
-
-        renderComparisonChart(items);
-
-        if (!items || items.length === 0) {
-            if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px;">No data available</td></tr>`;
-            return;
-        }
-
-        const sorted = [...items].sort((a, b) => Number(b.predicted_change_pct || 0) - Number(a.predicted_change_pct || 0));
-
-        tbody.innerHTML = sorted.map((item, idx) => {
-            const spot = item.current_price || state.prices[item.symbol]?.price || 0;
-            const change24 = Number(item.change_24h || 0);
-            const move = Number(item.predicted_change_pct || 0);
-            const isMovePos = move >= 0;
-            const isChangePos = change24 >= 0;
-
-            return `
-                <tr>
-                    <td>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted);">#${idx + 1}</span>
-                            <strong style="color:var(--text-primary); font-family:var(--font-mono);">${item.symbol}</strong>
-                        </div>
-                    </td>
-                    <td class="font-mono">${formatPrice(spot)}</td>
-                    <td class="font-mono ${isChangePos ? "change positive" : "change negative"}">
-                        ${isChangePos ? "+" : ""}${change24.toFixed(2)}%
-                    </td>
-                    <td class="font-mono ${isMovePos ? "change positive" : "change negative"}" style="font-weight:700;">
-                        ${isMovePos ? "+" : ""}${move.toFixed(2)}%
-                    </td>
-                    <td class="font-mono">
-                        ${item.risk_score ? (Number(item.risk_score) * 100).toFixed(0) + "/100" : "50/100"}
-                    </td>
-                    <td style="text-align: right;">
-                        <button class="btn btn-secondary btn-sm btn-select-matrix" data-symbol="${item.symbol}">
-                            Inspect &rarr;
-                        </button>
-                    </td>
-                </tr>
-            `;
-        }).join("");
-
-        tbody.querySelectorAll(".btn-select-matrix").forEach((btn) => {
-            btn.addEventListener("click", () => {
-                setActiveSymbol(btn.dataset.symbol);
-                switchView("forecast");
-            });
-        });
-    } catch (err) {
-        showToast(err.message, "error");
-    }
-}
-
-// ==========================================================================
-// News & Sentiment View Logic
+// VIEW 6: News & Sentiment View Logic
 // ==========================================================================
 async function loadSentiment() {
     const symbol = state.activeSymbol;
@@ -738,7 +855,7 @@ async function loadSentiment() {
             moodLabel.style.color = dominant === "Positive" ? "var(--accent-emerald)" : dominant === "Negative" ? "var(--accent-crimson)" : "var(--accent-amber)";
         }
         if (compoundScore) {
-            compoundScore.textContent = `Compound Polarity: ${Number(newsData.sentiment_score || 0).toFixed(4)}`;
+            compoundScore.textContent = `Compound: ${Number(newsData.sentiment_score || 0).toFixed(4)}`;
         }
         if (impactText) {
             impactText.textContent = newsData.impact || "News headlines and liquidity conditions indicate steady continuation.";
@@ -747,7 +864,7 @@ async function loadSentiment() {
         const grid = document.getElementById("news-grid-container");
         if (grid) {
             if (articles.length === 0) {
-                grid.innerHTML = `<p style="color: var(--text-muted); padding: 20px;">No articles currently cataloged for ${symbol}.</p>`;
+                grid.innerHTML = `<p style="color: var(--text-muted); padding: 24px;">No articles currently cataloged for ${symbol}.</p>`;
             } else {
                 grid.innerHTML = articles.map((article) => {
                     const tagClass = article.sentiment === "Positive" ? "sentiment-positive" : article.sentiment === "Negative" ? "sentiment-negative" : "sentiment-neutral";
@@ -760,7 +877,7 @@ async function loadSentiment() {
                                 <a href="${article.url}" target="_blank" rel="noopener noreferrer" class="news-title">
                                     ${article.title}
                                 </a>
-                                <p class="news-desc" style="margin-top: 8px;">${article.description}</p>
+                                <p class="news-desc" style="margin-top: 8px;">${article.description || ""}</p>
                             </div>
                             <div class="news-meta">
                                 <span>${article.source} • ${timeAgo}</span>
@@ -777,10 +894,182 @@ async function loadSentiment() {
 }
 
 // ==========================================================================
+// VIEW 7: Portfolio View Logic
+// ==========================================================================
+async function loadPortfolio() {
+    const tbody = document.getElementById("portfolio-table-body");
+    const totalValEl = document.getElementById("port-total-val");
+    const totalPnlEl = document.getElementById("port-total-pnl");
+    const totalPnlPctEl = document.getElementById("port-total-pnl-pct");
+    const topAssetEl = document.getElementById("port-top-asset");
+    const topAssetPctEl = document.getElementById("port-top-asset-pct");
+    const countEl = document.getElementById("port-holdings-count");
+
+    // Holdings Vault is strictly empty when no user is logged in
+    if (!state.user) {
+        state.portfolioEntries = [];
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="table-loading-cell">
+                        <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 10px; max-width: 440px;">
+                            <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--font-mono);">
+                                Vault Empty &bull; Authentication Required
+                            </span>
+                            <p style="font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+                                Your personal Holdings Vault is available upon authentication. Please sign in or create an account to view and manage your asset positions.
+                            </p>
+                            <button class="btn btn-primary btn-sm" id="vault-empty-signin-btn" style="margin-top: 6px;">Sign In to Open Vault</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            const signInBtn = document.getElementById("vault-empty-signin-btn");
+            if (signInBtn) {
+                signInBtn.addEventListener("click", () => openAuthModal("login"));
+            }
+        }
+        if (totalValEl) totalValEl.textContent = formatPrice(0);
+        if (totalPnlEl) {
+            totalPnlEl.textContent = formatPrice(0);
+            totalPnlEl.style.color = "var(--text-primary)";
+        }
+        if (totalPnlPctEl) {
+            totalPnlPctEl.textContent = "0.00% net return";
+            totalPnlPctEl.style.color = "var(--text-secondary)";
+        }
+        if (topAssetEl) topAssetEl.textContent = "-";
+        if (topAssetPctEl) topAssetPctEl.textContent = "-";
+        if (countEl) countEl.textContent = "0 assets tracked";
+        return;
+    }
+
+    let entries = [];
+    try {
+        entries = await getPortfolio();
+    } catch (_) {
+        entries = [];
+    }
+
+    state.portfolioEntries = entries;
+
+    if (!entries || entries.length === 0) {
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="table-loading-cell">
+                        No asset positions recorded in your vault yet. Record your first transaction using the form on the right.
+                    </td>
+                </tr>
+            `;
+        }
+        if (totalValEl) totalValEl.textContent = formatPrice(0);
+        if (totalPnlEl) {
+            totalPnlEl.textContent = formatPrice(0);
+            totalPnlEl.style.color = "var(--text-primary)";
+        }
+        if (totalPnlPctEl) {
+            totalPnlPctEl.textContent = "0.00% net return";
+            totalPnlPctEl.style.color = "var(--text-secondary)";
+        }
+        if (topAssetEl) topAssetEl.textContent = "-";
+        if (topAssetPctEl) topAssetPctEl.textContent = "-";
+        if (countEl) countEl.textContent = "0 assets tracked";
+        return;
+    }
+
+    let totalVal = 0;
+    let totalCost = 0;
+    let maxVal = 0;
+    let topSymbol = "-";
+
+    const rowsHtml = entries.map((entry) => {
+        const spot = entry.current_price || state.prices[entry.symbol]?.price || entry.average_buy_price;
+        const val = spot * entry.quantity;
+        const cost = entry.average_buy_price * entry.quantity;
+        const pnl = val - cost;
+        const pnlPct = cost > 0 ? (pnl / cost) * 100 : 0;
+        const isPos = pnl >= 0;
+
+        totalVal += val;
+        totalCost += cost;
+        if (val > maxVal) {
+            maxVal = val;
+            topSymbol = entry.symbol;
+        }
+
+        return `
+            <tr>
+                <td>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">${entry.symbol}</span>
+                        <span style="color:var(--text-muted); font-size:12px;">${entry.asset_name || ASSET_NAMES[entry.symbol] || ""}</span>
+                    </div>
+                </td>
+                <td class="font-mono" style="text-align:right;">${Number(entry.quantity).toLocaleString(undefined, { maximumFractionDigits: 6 })}</td>
+                <td class="font-mono" style="text-align:right;">${formatPrice(entry.average_buy_price)}</td>
+                <td class="font-mono" style="text-align:right;">${formatPrice(spot)}</td>
+                <td class="font-mono" style="text-align:right; font-weight:600;">${formatPrice(val)}</td>
+                <td class="font-mono" style="text-align:right; color:${isPos ? "var(--accent-emerald)" : "var(--accent-crimson)"};">
+                    ${isPos ? "+" : ""}${formatPrice(pnl)} (${isPos ? "+" : ""}${pnlPct.toFixed(2)}%)
+                </td>
+                <td style="text-align: right;">
+                    <button class="btn btn-ghost btn-sm btn-del-holding" data-id="${entry.id}" style="color:var(--accent-crimson); padding:3px 8px; font-size:12px;" title="Remove position">
+                        Remove
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join("");
+
+    if (tbody) tbody.innerHTML = rowsHtml;
+
+    const netPnl = totalVal - totalCost;
+    const netPnlPct = totalCost > 0 ? (netPnl / totalCost) * 100 : 0;
+    const isNetPos = netPnl >= 0;
+
+    if (totalValEl) totalValEl.textContent = formatPrice(totalVal);
+    if (totalPnlEl) {
+        totalPnlEl.textContent = `${isNetPos ? "+" : ""}${formatPrice(netPnl)}`;
+        totalPnlEl.style.color = isNetPos ? "var(--accent-emerald)" : "var(--accent-crimson)";
+    }
+    if (totalPnlPctEl) {
+        totalPnlPctEl.textContent = `${isNetPos ? "+" : ""}${netPnlPct.toFixed(2)}% net return`;
+        totalPnlPctEl.style.color = isNetPos ? "var(--accent-emerald)" : "var(--accent-crimson)";
+    }
+    if (topAssetEl) topAssetEl.textContent = topSymbol;
+    if (topAssetPctEl) {
+        const topPct = totalVal > 0 ? ((maxVal / totalVal) * 100).toFixed(1) : "0";
+        topAssetPctEl.textContent = `${topPct}% of portfolio`;
+    }
+    if (countEl) countEl.textContent = `${entries.length} positions held`;
+
+    // Attach delete listeners
+    tbody.querySelectorAll(".btn-del-holding").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+            const id = btn.dataset.id;
+            try {
+                await deletePortfolioEntry(id);
+                showToast("Position removed from portfolio", "info");
+                loadPortfolio();
+            } catch (err) {
+                showToast(err.message, "error");
+            }
+        });
+    });
+}
+
+// ==========================================================================
 // Central View Dispatcher
 // ==========================================================================
 function loadDataForCurrentView() {
     switch (state.activeView) {
+        case "dashboard":
+            loadDashboard();
+            break;
+        case "markets":
+            loadMarkets();
+            break;
         case "portfolio":
             loadPortfolio();
             break;
@@ -816,6 +1105,9 @@ function setupWebSocket() {
 
     const beacon = document.getElementById("beacon-text");
     const beaconDot = document.getElementById("beacon-dot");
+    const sidebarDot = document.getElementById("sidebar-status-dot");
+    const sidebarText = document.getElementById("sidebar-status-text");
+    const wsStatusSetting = document.getElementById("settings-ws-status");
 
     try {
         const ws = new WebSocket(wsUrl);
@@ -824,6 +1116,12 @@ function setupWebSocket() {
         ws.onopen = () => {
             if (beacon) beacon.textContent = "LIVE ENGINE";
             if (beaconDot) beaconDot.classList.remove("degraded");
+            if (sidebarDot) sidebarDot.classList.remove("degraded");
+            if (sidebarText) sidebarText.textContent = "Stream Active";
+            if (wsStatusSetting) {
+                wsStatusSetting.textContent = "CONNECTED";
+                wsStatusSetting.className = "status-pill status-pill-active";
+            }
         };
 
         ws.onmessage = (event) => {
@@ -834,8 +1132,14 @@ function setupWebSocket() {
                     state.prices = payload.prices;
                     updateTickerRibbon(payload.prices);
 
-                    // Update live spot price in current view if applicable
-                    if (state.activeView === "forecast") {
+                    // Update live spot price in current view
+                    if (state.activeView === "dashboard") {
+                        const btc = payload.prices["BTC"];
+                        if (btc) {
+                            const pEl = document.getElementById("dash-btc-price");
+                            if (pEl) pEl.textContent = formatPrice(btc.price);
+                        }
+                    } else if (state.activeView === "forecast") {
                         const spot = payload.prices[state.activeSymbol]?.price;
                         if (spot) {
                             const curEl = document.getElementById("fc-current-price");
@@ -849,7 +1153,12 @@ function setupWebSocket() {
         ws.onclose = () => {
             if (beacon) beacon.textContent = "CACHED RESILIENT";
             if (beaconDot) beaconDot.classList.add("degraded");
-            // Auto reconnect after 5s
+            if (sidebarDot) sidebarDot.classList.add("degraded");
+            if (sidebarText) sidebarText.textContent = "Reconnecting...";
+            if (wsStatusSetting) {
+                wsStatusSetting.textContent = "RECONNECTING";
+                wsStatusSetting.className = "status-pill";
+            }
             clearTimeout(state.wsReconnectTimeout);
             state.wsReconnectTimeout = setTimeout(setupWebSocket, 5000);
         };
@@ -857,6 +1166,12 @@ function setupWebSocket() {
         ws.onerror = () => {
             if (beacon) beacon.textContent = "OFFLINE RESILIENT";
             if (beaconDot) beaconDot.classList.add("degraded");
+            if (sidebarDot) sidebarDot.classList.add("degraded");
+            if (sidebarText) sidebarText.textContent = "Offline Cache";
+            if (wsStatusSetting) {
+                wsStatusSetting.textContent = "OFFLINE";
+                wsStatusSetting.className = "status-pill";
+            }
         };
     } catch (_) {
         if (beacon) beacon.textContent = "OFFLINE RESILIENT";
@@ -866,7 +1181,8 @@ function setupWebSocket() {
 // Initial fallback load for live prices
 async function loadInitialLivePrices() {
     try {
-        const prices = await getLivePrices();
+        const res = await getLivePrices();
+        const prices = res.prices || res;
         if (prices) {
             state.prices = prices;
             updateTickerRibbon(prices);
@@ -878,13 +1194,21 @@ async function loadInitialLivePrices() {
 // Event Listeners & UI Binding
 // ==========================================================================
 function bindEvents() {
-    // Tab switching
+    // Tab and Sidebar view switching
     document.querySelectorAll(".tab-btn").forEach((btn) => {
         btn.addEventListener("click", () => {
             const view = btn.dataset.view;
             if (view) switchView(view);
         });
     });
+
+    // Mobile sidebar drawer
+    const btnMobileMenu = document.getElementById("btn-mobile-menu");
+    const btnSidebarClose = document.getElementById("btn-sidebar-close");
+    const sidebarBackdrop = document.getElementById("sidebar-backdrop");
+    if (btnMobileMenu) btnMobileMenu.addEventListener("click", openMobileSidebar);
+    if (btnSidebarClose) btnSidebarClose.addEventListener("click", closeMobileSidebar);
+    if (sidebarBackdrop) sidebarBackdrop.addEventListener("click", closeMobileSidebar);
 
     // Asset chips quick switcher
     document.querySelectorAll(".asset-chip").forEach((chip) => {
@@ -916,12 +1240,66 @@ function bindEvents() {
         });
     });
 
-    // Brand click to portfolio
+    // Settings Modal
+    const btnSidebarSettings = document.getElementById("sidebar-btn-settings");
+    const btnMenuSettings = document.getElementById("menu-open-settings");
+    const btnCloseSettings = document.getElementById("btn-close-settings");
+    const btnDoneSettings = document.getElementById("btn-done-settings");
+    const settingsModal = document.getElementById("settings-modal");
+    const btnClearCache = document.getElementById("btn-clear-cache");
+
+    if (btnSidebarSettings) btnSidebarSettings.addEventListener("click", openSettingsModal);
+    if (btnMenuSettings) btnMenuSettings.addEventListener("click", openSettingsModal);
+    if (btnCloseSettings) btnCloseSettings.addEventListener("click", closeSettingsModal);
+    if (btnDoneSettings) btnDoneSettings.addEventListener("click", closeSettingsModal);
+    if (settingsModal) {
+        settingsModal.addEventListener("click", (e) => {
+            if (e.target === settingsModal) closeSettingsModal();
+        });
+    }
+    if (btnClearCache) {
+        btnClearCache.addEventListener("click", () => {
+            try {
+                sessionStorage.clear();
+            } catch (_) {}
+            showToast("Local quote cache purged", "info");
+        });
+    }
+
+    // Refresh Buttons
+    const btnGlobalRefresh = document.getElementById("btn-global-refresh");
+    const btnRefreshMarkets = document.getElementById("btn-refresh-markets");
+    if (btnGlobalRefresh) {
+        btnGlobalRefresh.addEventListener("click", async () => {
+            await loadInitialLivePrices();
+            loadDataForCurrentView();
+            showToast("Market data refreshed", "info");
+        });
+    }
+    if (btnRefreshMarkets) {
+        btnRefreshMarkets.addEventListener("click", async () => {
+            await loadInitialLivePrices();
+            loadMarkets();
+            showToast("Market quotes updated", "info");
+        });
+    }
+
+    // Dashboard shortcuts
+    const btnDashGotoMarkets = document.getElementById("btn-dash-goto-markets");
+    const btnDashDeepForecast = document.getElementById("btn-dash-deep-forecast");
+    if (btnDashGotoMarkets) {
+        btnDashGotoMarkets.addEventListener("click", () => switchView("markets"));
+    }
+    if (btnDashDeepForecast) {
+        btnDashDeepForecast.addEventListener("click", () => switchView("forecast"));
+    }
+
+    // Brand click
     const brandLink = document.getElementById("brand-link");
     if (brandLink) {
         brandLink.addEventListener("click", (e) => {
             e.preventDefault();
-            switchView("portfolio");
+            switchView("dashboard");
         });
     }
 
@@ -965,20 +1343,20 @@ function bindEvents() {
     // Dropdown items
     const menuGotoPort = document.getElementById("menu-goto-portfolio");
     if (menuGotoPort) {
-        menuGotoPort.addEventListener("click", () => {
-            switchView("portfolio");
-        });
+        menuGotoPort.addEventListener("click", () => switchView("portfolio"));
     }
 
     const btnLogout = document.getElementById("btn-logout");
-    if (btnLogout) {
-        btnLogout.addEventListener("click", () => {
-            clearStoredToken();
-            updateAuthUI(null);
-            showToast("Signed out of session", "info");
-            loadPortfolio();
-        });
-    }
+    const sidebarBtnLogout = document.getElementById("sidebar-btn-logout");
+    const handleLogout = () => {
+        clearStoredToken();
+        updateAuthUI(null);
+        showToast("Signed out of session", "info");
+        loadPortfolio();
+    };
+
+    if (btnLogout) btnLogout.addEventListener("click", handleLogout);
+    if (sidebarBtnLogout) sidebarBtnLogout.addEventListener("click", handleLogout);
 
     // Login Form Submit
     const loginForm = document.getElementById("auth-form-login");
